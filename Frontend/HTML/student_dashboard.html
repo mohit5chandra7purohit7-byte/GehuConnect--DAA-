@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - GEHU Connect</title>
+    <link rel="stylesheet" href="../CSS/dashboard.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="header-content">
+            <h1>GEHU Connect</h1>
+            <div class="user-info">
+                <span id="userName">Loading...</span>
+                <button id="logoutBtn" class="logout-btn">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Dashboard -->
+    <div class="dashboard-container">
+
+        <!-- Welcome Section -->
+        <section class="welcome-section">
+            <h2>Welcome back, <span id="studentName">Student</span>!</h2>
+            <p class="student-details">
+                Roll No: <span id="studentId"></span> |
+                <span id="course"></span> |
+                Semester <span id="semester"></span> |
+                Section <span id="section"></span>
+            </p>
+        </section>
+
+        <!-- Attendance Alert (Shows if < 75%) -->
+        <div id="attendanceAlert" class="alert alert-warning" style="display: none;">
+            <strong>⚠️ Attendance Alert!</strong>
+            <p id="alertMessage"></p>
+        </div>
+
+        <!-- Quick Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-info">
+                    <h3 id="avgAttendance">--%</h3>
+                    <p>Average Attendance</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">📚</div>
+                <div class="stat-info">
+                    <h3 id="totalSubjects">--</h3>
+                    <p>Enrolled Subjects</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">📝</div>
+                <div class="stat-info">
+                    <h3 id="upcomingExams">--</h3>
+                    <p>Upcoming Exams</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">🎯</div>
+                <div class="stat-info">
+                    <h3 id="avgGrade">--</h3>
+                    <p>Average Grade</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="content-grid">
+
+            <!-- Attendance Section -->
+            <section class="card">
+                <h3>📊 Attendance Overview</h3>
+                <div id="attendanceList" class="attendance-list">
+                    <p class="loading">Loading attendance data...</p>
+                </div>
+            </section>
+
+            <!-- Recent Notices -->
+            <section class="card">
+                <h3>📢 Recent Notices</h3>
+                <div id="noticesList" class="notices-list">
+                    <p class="loading">Loading notices...</p>
+                </div>
+            </section>
+
+            <!-- Quick Links -->
+            <section class="card quick-links-card">
+                <h3>🔗 Quick Links</h3>
+                <div class="quick-links">
+                    <a href="#" class="quick-link">
+                        <span class="link-icon">📋</span>
+                        <span>All Notices</span>
+                    </a>
+                    <a href="#" class="quick-link">
+                        <span class="link-icon">📝</span>
+                        <span>Exams & Results</span>
+                    </a>
+                    <a href="#" class="quick-link">
+                        <span class="link-icon">🎭</span>
+                        <span>Clubs & Events</span>
+                    </a>
+                    <a href="#" class="quick-link">
+                        <span class="link-icon">💰</span>
+                        <span>Fee Payment</span>
+                    </a>
+                    <a href="#" class="quick-link">
+                        <span class="link-icon">📅</span>
+                        <span>Timetable</span>
+                    </a>
+                    <a href="#" class="quick-link">
+                        <span class="link-icon">❓</span>
+                        <span>Help & FAQs</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Recent Exam Results -->
+            <section class="card">
+                <h3>📈 Recent Exam Results</h3>
+                <div id="examResults" class="exam-results">
+                    <p class="loading">Loading results...</p>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="dashboard-footer">
+        <p>&copy; 2026 GEHU Connect | Developed by Team Avengers</p>
+    </footer>
+
+    <script src="../JavaScript/dashboard.js"></script>
+</body>
+
+</html>

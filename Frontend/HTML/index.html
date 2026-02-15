@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEHU Connect - Student Login</title>
+    <link rel="stylesheet" href="../CSS/Style.css">
+</head>
+
+<body>
+    <div class="login-container">
+        <!-- Logo Section -->
+        <div class="header">
+            <h1>GEHU Connect</h1>
+            <p class="tagline">Student Portal Redesign</p>
+        </div>
+
+        <!-- Random Quote Generator -->
+        <div class="quote-box">
+            <p id="quote">Loading inspirational quote...</p>
+            <button type="button" id="newQuoteBtn" class="quote-btn">New Quote</button>
+        </div>
+
+        <!-- Login Form -->
+        <form id="loginForm" class="login-form">
+            <h2>Student Login</h2>
+
+            <!-- Student Roll No -->
+            <div class="form-group">
+                <label for="studentId">Student Roll No</label>
+                <input type="text" id="studentId" placeholder="Enter your Student Roll No" required>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter your password" required>
+            </div>
+
+            <!-- Captcha -->
+            <div class="form-group captcha-group">
+                <label>Verify you're human</label>
+                <div class="captcha-box">
+                    <span id="captchaText" class="captcha-text"></span>
+                    <button type="button" id="refreshCaptcha" class="refresh-btn">🔄</button>
+                </div>
+                <input type="text" id="captchaInput" placeholder="Enter captcha above" required>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="login-btn">Login</button>
+
+            <!-- Error Message -->
+            <p id="errorMsg" class="error-msg"></p>
+        </form>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Forgot Password? <a href="#">Reset here</a></p>
+        </div>
+    </div>
+
+    <script src="../JavaScript/Script.js"></script>
+</body>
+
+</html>
