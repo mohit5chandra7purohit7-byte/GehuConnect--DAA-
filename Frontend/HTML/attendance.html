@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance — GEHU Connect</title>
+    <link rel="stylesheet" href="../CSS/attendance.css">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-inner">
+            <div class="logo">
+                <a href="student_dashboard.html">← Dashboard</a>
+                <span class="sep">|</span>
+                <h1>GEHU Connect</h1>
+            </div>
+            <div class="student-badge">
+                <span id="studentNameBadge">Mohit Purohit</span>
+                <span class="roll-badge">2419260</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Title -->
+    <div class="page-title">
+        <h2>📊 Attendance &amp; Predictor</h2>
+        <p class="subtitle">Subjects sorted by attendance % using <strong>Merge Sort</strong> (lowest first — critical subjects on top)</p>
+    </div>
+
+    <div class="main-container">
+
+        <!-- ===== ALGORITHM EXPLAINER BOX ===== -->
+        <div class="algo-box">
+            <h3>🔬 DSA Implementation — Merge Sort</h3>
+            <div class="algo-grid">
+                <div class="algo-step">
+                    <span class="step-num">1</span>
+                    <div>
+                        <strong>Input</strong> — 6 subjects with raw attendance data loaded as an array
+                    </div>
+                </div>
+                <div class="algo-step">
+                    <span class="step-num">2</span>
+                    <div>
+                        <strong>Divide</strong> — Array is split into halves recursively until single elements remain
+                    </div>
+                </div>
+                <div class="algo-step">
+                    <span class="step-num">3</span>
+                    <div>
+                        <strong>Conquer</strong> — Each pair of halves is merged back in sorted order (by % ascending)
+                    </div>
+                </div>
+                <div class="algo-step">
+                    <span class="step-num">4</span>
+                    <div>
+                        <strong>Output</strong> — Fully sorted list: subjects with lowest attendance appear first
+                    </div>
+                </div>
+            </div>
+            <div class="algo-complexity">
+                <span>⏱ Time: <code>O(n log n)</code></span>
+                <span>💾 Space: <code>O(n)</code></span>
+                <span>📐 Stable: <code>Yes</code></span>
+                <span>📁 Implemented in: <code>Backend/attendance.cpp</code></span>
+            </div>
+        </div>
+
+        <!-- ===== SORT DEMO (before / after) ===== -->
+        <div class="demo-section">
+            <h3>⚙️ Live Sort Demo</h3>
+            <p class="demo-note">Click the button to watch Merge Sort animate the table — just like the C++ program does it.</p>
+            <button id="sortBtn" class="sort-btn">▶ Run Merge Sort</button>
+            <button id="resetBtn" class="reset-btn" style="display:none;">↺ Reset</button>
+            <div id="sortStatus" class="sort-status"></div>
+        </div>
+
+        <!-- ===== ATTENDANCE TABLE ===== -->
+        <div class="table-wrapper">
+            <table class="attendance-table" id="attendanceTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Subject</th>
+                        <th>Code</th>
+                        <th>Attended</th>
+                        <th>Total</th>
+                        <th>Percentage</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="attendanceBody">
+                    <!-- Filled by JS -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ===== SUMMARY CARDS ===== -->
+        <div class="summary-grid" id="summaryGrid">
+            <div class="sum-card">
+                <div class="sum-icon">📊</div>
+                <div class="sum-val" id="avgPct">--%</div>
+                <div class="sum-label">Overall Average</div>
+            </div>
+            <div class="sum-card">
+                <div class="sum-icon">⚠️</div>
+                <div class="sum-val danger" id="lowCount">--</div>
+                <div class="sum-label">Below 75%</div>
+            </div>
+            <div class="sum-card">
+                <div class="sum-icon">✅</div>
+                <div class="sum-val safe" id="safeCount">--</div>
+                <div class="sum-label">Safe Subjects</div>
+            </div>
+            <div class="sum-card">
+                <div class="sum-icon">📚</div>
+                <div class="sum-val" id="totalSubs">--</div>
+                <div class="sum-label">Total Subjects</div>
+            </div>
+        </div>
+
+        <!-- ===== RECOVERY PREDICTOR ===== -->
+        <div class="predictor-section">
+            <h3>📈 Recovery Predictor</h3>
+            <p class="pred-note">Formula: <code>x = ceil((0.75 × total − attended) / 0.25)</code> — classes needed to reach 75%</p>
+            <div id="predictorCards" class="predictor-cards">
+                <!-- Filled by JS -->
+            </div>
+        </div>
+
+        <!-- ===== DUMMY DATA NOTE ===== -->
+        <div class="data-note">
+            <h4>📁 About the Data</h4>
+            <p>
+                This page uses <strong>Approach 1 — Hardcoded in JS</strong>: the dummy data is written directly inside <code>attendance.js</code> as a JS array.
+                The same data also exists in <code>Data/attendance.txt</code> (Approach 2 — text file) which is used by the C++ program.
+                Both approaches are valid for a Phase 2 demo.
+            </p>
+        </div>
+
+    </div><!-- end main-container -->
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2026 GEHU Connect | Module: Mohit — Attendance &amp; Predictor | DSA: Merge Sort</p>
+    </footer>
+
+    <script src="../JavaScript/attendance.js"></script>
+
+</body>
+</html>

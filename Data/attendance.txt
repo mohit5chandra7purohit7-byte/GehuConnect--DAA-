@@ -1,0 +1,35 @@
+# GEHU Connect — Attendance Dummy Data
+# Format: StudentID | SubjectCode | SubjectName | TotalClasses | AttendedClasses
+# This file is the "text file approach" for dummy data (Phase 2 demo)
+
+# ----- Student: Mohit Purohit | Roll: 2419260 -----
+2419260 | CSE401 | Design & Analysis of Algorithms | 40 | 35
+2419260 | CSE402 | Operating Systems               | 38 | 28
+2419260 | CSE403 | Database Management Systems     | 42 | 38
+2419260 | CSE404 | Computer Networks               | 40 | 29
+2419260 | CSE405 | Software Engineering            | 36 | 36
+2419260 | CSE406 | Web Technology Lab              | 30 | 20
+
+# ----- Student: Maitri Goyal | Roll: 2418628 -----
+2418628 | CSE401 | Design & Analysis of Algorithms | 40 | 38
+2418628 | CSE402 | Operating Systems               | 38 | 36
+2418628 | CSE403 | Database Management Systems     | 42 | 40
+2418628 | CSE404 | Computer Networks               | 40 | 37
+2418628 | CSE405 | Software Engineering            | 36 | 35
+2418628 | CSE406 | Web Technology Lab              | 30 | 28
+
+# ----- Student: Manisha Bisht | Roll: 2419475 -----
+2419475 | CSE401 | Design & Analysis of Algorithms | 40 | 36
+2419475 | CSE402 | Operating Systems               | 38 | 34
+2419475 | CSE403 | Database Management Systems     | 42 | 39
+2419475 | CSE404 | Computer Networks               | 40 | 35
+2419475 | CSE405 | Software Engineering            | 36 | 34
+2419475 | CSE406 | Web Technology Lab              | 30 | 22
+
+# ----- Student: Shyamli Bisht | Roll: 2418996 -----
+2418996 | CSE401 | Design & Analysis of Algorithms | 40 | 37
+2418996 | CSE402 | Operating Systems               | 38 | 35
+2418996 | CSE403 | Database Management Systems     | 42 | 41
+2418996 | CSE404 | Computer Networks               | 40 | 36
+2418996 | CSE405 | Software Engineering            | 36 | 33
+2418996 | CSE406 | Web Technology Lab              | 30 | 25
