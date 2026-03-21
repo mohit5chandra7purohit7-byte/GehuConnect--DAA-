@@ -11,11 +11,12 @@
 // ============================================================
 const DUMMY_ATTENDANCE = [
     { subject: "Design & Analysis of Algorithms", code: "CSE401", total: 40, attended: 35 },
-    { subject: "Operating Systems",               code: "CSE402", total: 38, attended: 28 },
-    { subject: "Database Management Systems",     code: "CSE403", total: 42, attended: 38 },
-    { subject: "Computer Networks",               code: "CSE404", total: 40, attended: 29 },
-    { subject: "Software Engineering",            code: "CSE405", total: 36, attended: 36 },
-    { subject: "Web Technology Lab",              code: "CSE406", total: 30, attended: 20 }
+    { subject: "Operating Systems", code: "CSE402", total: 38, attended: 28 },
+    { subject: "Database Management Systems", code: "CSE403", total: 42, attended: 38 },
+    { subject: "Computer Networks", code: "CSE404", total: 40, attended: 29 },
+    { subject: "Software Engineering", code: "CSE405", total: 36, attended: 36 },
+    { subject: "Web Technology Lab", code: "CSE406", total: 30, attended: 20 },
+    { subject: "Hindi and English", code: "HIE407", total: 20, attended: 15 }
 ];
 
 // ============================================================
@@ -36,8 +37,8 @@ function enrichData(data) {
 function mergeSort(arr) {
     if (arr.length <= 1) return arr;                 // Base case
 
-    const mid   = Math.floor(arr.length / 2);
-    const left  = mergeSort(arr.slice(0, mid));      // Sort left half
+    const mid = Math.floor(arr.length / 2);
+    const left = mergeSort(arr.slice(0, mid));      // Sort left half
     const right = mergeSort(arr.slice(mid));          // Sort right half
 
     return merge(left, right);                        // Merge both
@@ -80,8 +81,8 @@ function predictRecovery(subject) {
 //  RENDER — Build one table row from a subject object
 // ============================================================
 function buildRow(subject, index) {
-    const isSafe  = subject.percentage >= 75;
-    const pctCls  = isSafe ? 'safe' : 'danger';
+    const isSafe = subject.percentage >= 75;
+    const pctCls = isSafe ? 'safe' : 'danger';
     const badgeTxt = isSafe ? '✅ Safe' : '⚠ Low';
 
     return `
@@ -117,12 +118,12 @@ function renderTable(data) {
 // ============================================================
 function renderSummary(data) {
     const total = data.length;
-    const avg   = (data.reduce((s, x) => s + x.percentage, 0) / total).toFixed(1);
-    const low   = data.filter(x => x.percentage < 75).length;
-    const safe  = total - low;
+    const avg = (data.reduce((s, x) => s + x.percentage, 0) / total).toFixed(1);
+    const low = data.filter(x => x.percentage < 75).length;
+    const safe = total - low;
 
-    document.getElementById('avgPct').textContent    = avg + '%';
-    document.getElementById('lowCount').textContent  = low;
+    document.getElementById('avgPct').textContent = avg + '%';
+    document.getElementById('lowCount').textContent = low;
     document.getElementById('safeCount').textContent = safe;
     document.getElementById('totalSubs').textContent = total;
 }
@@ -166,12 +167,12 @@ function renderPredictor(data) {
 // ============================================================
 let isSorted = false;
 let originalData = [];
-let sortedData   = [];
+let sortedData = [];
 
 function runSortAnimation() {
-    const btn     = document.getElementById('sortBtn');
+    const btn = document.getElementById('sortBtn');
     const resetBtn = document.getElementById('resetBtn');
-    const status  = document.getElementById('sortStatus');
+    const status = document.getElementById('sortStatus');
 
     btn.disabled = true;
     status.textContent = 'Step 1: Dividing array into halves...';
@@ -210,9 +211,9 @@ function resetSort() {
     renderTable(originalData);
     renderPredictor(originalData);
 
-    const btn      = document.getElementById('sortBtn');
+    const btn = document.getElementById('sortBtn');
     const resetBtn = document.getElementById('resetBtn');
-    const status   = document.getElementById('sortStatus');
+    const status = document.getElementById('sortStatus');
 
     btn.disabled = false;
     resetBtn.style.display = 'none';
