@@ -4,144 +4,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Dashboard - GEHU Connect</title>
+    <title>Student Dashboard — GEHU Connect</title>
     <link rel="stylesheet" href="../CSS/dashboard.css">
 </head>
 
 <body>
-    <!-- Header -->
-    <header class="dashboard-header">
-        <div class="header-content">
-            <h1>GEHU Connect</h1>
-            <div class="user-info">
-                <span id="userName">Loading...</span>
-                <button id="logoutBtn" class="logout-btn">Logout</button>
-            </div>
+
+    <!-- ===== TOP NAV BAR ===== -->
+    <nav class="topnav">
+        <div class="nav-logo">GEHU Connect</div>
+        <button class="hamburger" id="hamburgerBtn" aria-label="Open menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </nav>
+
+    <!-- ===== SLIDE-IN SIDEBAR MENU ===== -->
+    <div class="sidebar-overlay" id="overlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <span>Navigation</span>
+            <button class="close-btn" id="closeBtn">✕</button>
         </div>
-    </header>
+        <ul class="sidebar-nav">
+            <li class="active"><a href="student_dashboard.html">🏠 Home</a></li>
+            <li><a href="attendance.html">📊 Attendance</a></li>
+            <li class="soon"><a href="#">📝 Exams &amp; Results <span class="tag">Soon</span></a></li>
+            <li class="soon"><a href="#">📢 Notices <span class="tag">Soon</span></a></li>
+            <li class="soon"><a href="#">🎭 Clubs &amp; Events <span class="tag">Soon</span></a></li>
+            <li class="soon"><a href="#">📚 Assignments <span class="tag">Soon</span></a></li>
+            <li class="soon"><a href="#">💰 Fee Payment <span class="tag">Soon</span></a></li>
+            <li class="soon"><a href="#">🏠 Hostel <span class="tag">Soon</span></a></li>
+            <li class="soon"><a href="#">📅 Timetable <span class="tag">Soon</span></a></li>
+            <li class="divider"></li>
+            <li><a href="#" id="logoutLink">🚪 Logout</a></li>
+        </ul>
+    </aside>
 
-    <!-- Main Dashboard -->
-    <div class="dashboard-container">
+    <!-- ===== MAIN PAGE ===== -->
+    <div class="page">
 
-        <!-- Welcome Section -->
-        <section class="welcome-section">
-            <h2>Welcome back, <span id="studentName">Student</span>!</h2>
-            <p class="student-details">
-                Roll No: <span id="studentId"></span> |
-                <span id="course"></span> |
-                Semester <span id="semester"></span> |
-                Section <span id="section"></span>
-            </p>
-        </section>
-
-        <!-- Attendance Alert (Shows if < 75%) -->
-        <div id="attendanceAlert" class="alert alert-warning" style="display: none;">
-            <strong>⚠️ Attendance Alert!</strong>
-            <p id="alertMessage"></p>
-        </div>
-
-        <!-- Quick Stats Cards -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon">📊</div>
-                <div class="stat-info">
-                    <h3 id="avgAttendance">--%</h3>
-                    <p>Average Attendance</p>
-                </div>
+        <!-- Profile Header Card (blue banner) -->
+        <div class="profile-banner">
+            <div class="avatar-ring">
+                <!-- Initials avatar — replace src with real photo in Phase 3 -->
+                <div class="avatar-initials" id="avatarInitials">MP</div>
             </div>
-
-            <div class="stat-card">
-                <div class="stat-icon">📚</div>
-                <div class="stat-info">
-                    <h3 id="totalSubjects">--</h3>
-                    <p>Enrolled Subjects</p>
-                </div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-icon">📝</div>
-                <div class="stat-info">
-                    <h3 id="upcomingExams">--</h3>
-                    <p>Upcoming Exams</p>
-                </div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-icon">🎯</div>
-                <div class="stat-info">
-                    <h3 id="avgGrade">--</h3>
-                    <p>Average Grade</p>
-                </div>
+            <h1 id="profileName">MOHIT CHANDRA PUROHIT</h1>
+            <p id="profileRoll">2419260</p>
+            <div class="profile-contacts">
+                <span>✉ <span id="profileEmail">2419260@gehu.ac.in</span></span>
+                <span>📞 Not provided</span>
             </div>
         </div>
 
-        <!-- Main Content Grid -->
-        <div class="content-grid">
-
-            <!-- Attendance Section -->
-            <section class="card">
-                <h3>📊 Attendance Overview</h3>
-                <div id="attendanceList" class="attendance-list">
-                    <p class="loading">Loading attendance data...</p>
-                </div>
-            </section>
-
-            <!-- Recent Notices -->
-            <section class="card">
-                <h3>📢 Recent Notices</h3>
-                <div id="noticesList" class="notices-list">
-                    <p class="loading">Loading notices...</p>
-                </div>
-            </section>
-
-            <!-- Quick Links -->
-            <section class="card quick-links-card">
-                <h3>🔗 Quick Links</h3>
-                <div class="quick-links">
-                    <a href="#" class="quick-link">
-                        <span class="link-icon">📋</span>
-                        <span>All Notices</span>
-                    </a>
-                    <a href="#" class="quick-link">
-                        <span class="link-icon">📝</span>
-                        <span>Exams & Results</span>
-                    </a>
-                    <a href="#" class="quick-link">
-                        <span class="link-icon">🎭</span>
-                        <span>Clubs & Events</span>
-                    </a>
-                    <a href="#" class="quick-link">
-                        <span class="link-icon">💰</span>
-                        <span>Fee Payment</span>
-                    </a>
-                    <a href="#" class="quick-link">
-                        <span class="link-icon">📅</span>
-                        <span>Timetable</span>
-                    </a>
-                    <a href="#" class="quick-link">
-                        <span class="link-icon">❓</span>
-                        <span>Help & FAQs</span>
-                    </a>
-                </div>
-            </section>
-
-            <!-- Recent Exam Results -->
-            <section class="card">
-                <h3>📈 Recent Exam Results</h3>
-                <div id="examResults" class="exam-results">
-                    <p class="loading">Loading results...</p>
-                </div>
-            </section>
-
+        <!-- ===== ID CARD SECTION ===== -->
+        <div class="card-block">
+            <div class="card-title">
+                <span class="card-icon">🪪</span>
+                <strong>ID Card</strong>
+            </div>
+            <table class="info-table">
+                <tr><th>Father Name</th><td id="fatherName">—</td></tr>
+                <tr><th>Mother Name</th><td id="motherName">—</td></tr>
+                <tr><th>D.O.B.</th><td id="dob">—</td></tr>
+                <tr><th>Official Email</th><td id="officialEmail">—</td></tr>
+                <tr><th>College</th><td>GEHU – Dehradun Campus</td></tr>
+                <tr><th>Course</th><td>BACHELOR OF TECHNOLOGY</td></tr>
+                <tr><th>Specialization</th><td id="specialization">CSE (Hons.) with Cyber Security</td></tr>
+                <tr><th>Year / Sem</th><td id="yearSem">—</td></tr>
+                <tr><th>Branch</th><td>B.Tech (CSE)</td></tr>
+                <tr><th>Section</th><td id="sectionCell">—</td></tr>
+                <tr><th>Enroll No.</th><td id="enrollNo">—</td></tr>
+                <tr><th>University Roll No.</th><td id="uniRoll">—</td></tr>
+            </table>
         </div>
+
+        <!-- ===== QUICK ACCESS TILES ===== -->
+        <div class="tiles-title">Quick Access</div>
+        <div class="tiles-grid">
+            <a href="attendance.html" class="tile">
+                <div class="tile-icon">📊</div>
+                <div class="tile-label">Attendance</div>
+            </a>
+            <a href="#" class="tile dim">
+                <div class="tile-icon">📝</div>
+                <div class="tile-label">Exams</div>
+            </a>
+            <a href="#" class="tile dim">
+                <div class="tile-icon">📢</div>
+                <div class="tile-label">Notices</div>
+            </a>
+            <a href="#" class="tile dim">
+                <div class="tile-icon">🎭</div>
+                <div class="tile-label">Clubs</div>
+            </a>
+            <a href="#" class="tile dim">
+                <div class="tile-icon">📚</div>
+                <div class="tile-label">Assignments</div>
+            </a>
+            <a href="#" class="tile dim">
+                <div class="tile-icon">💰</div>
+                <div class="tile-label">Fees</div>
+            </a>
+            <a href="#" class="tile dim">
+                <div class="tile-icon">🏠</div>
+                <div class="tile-label">Hostel</div>
+            </a>
+            <a href="#" class="tile dim">
+                <div class="tile-icon">📅</div>
+                <div class="tile-label">Timetable</div>
+            </a>
+        </div>
+
+        <footer class="footer">© 2026 GEHU Connect | Team Avengers</footer>
     </div>
-
-    <!-- Footer -->
-    <footer class="dashboard-footer">
-        <p>&copy; 2026 GEHU Connect | Developed by Team Avengers</p>
-    </footer>
 
     <script src="../JavaScript/dashboard.js"></script>
 </body>
-
 </html>
