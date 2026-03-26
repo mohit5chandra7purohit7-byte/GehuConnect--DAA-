@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignments &amp; Exams — GEHU Connect</title>
+    <link rel="stylesheet" href="../CSS/assignments.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-inner">
+            <div class="logo">
+                <a href="student_dashboard.html">← Dashboard</a>
+                <span class="sep">|</span>
+                <h1>GEHU Connect</h1>
+            </div>
+            <div class="student-badge">
+                <span id="studentNameBadge">Loading...</span>
+                <span class="roll-badge" id="rollBadge">—</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Title -->
+    <div class="page-title">
+        <h2>📝 Assignments &amp; Exams</h2>
+        <p class="subtitle">DSA: <strong style="color:var(--accent2)">Min Heap</strong> — nearest deadline always on top · <strong style="color:var(--accent2)">Linked List</strong> — submission history</p>
+    </div>
+
+    <div class="main-container">
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="assignments">📋 Assignments</button>
+            <button class="tab-btn" data-tab="exams">📅 Exam Schedule</button>
+            <button class="tab-btn" data-tab="history">🕐 Submission History</button>
+        </div>
+
+        <!-- ===== TAB: ASSIGNMENTS ===== -->
+        <div class="tab-panel active" id="tab-assignments">
+
+            <!-- Summary cards -->
+            <div class="summary-grid">
+                <div class="sum-card">
+                    <div class="sum-icon">📋</div>
+                    <div class="sum-val" id="totalAssign">--</div>
+                    <div class="sum-label">Total Assignments</div>
+                </div>
+                <div class="sum-card">
+                    <div class="sum-icon">⏳</div>
+                    <div class="sum-val warn" id="pendingCount">--</div>
+                    <div class="sum-label">Pending</div>
+                </div>
+                <div class="sum-card">
+                    <div class="sum-icon">✅</div>
+                    <div class="sum-val safe" id="submittedCount">--</div>
+                    <div class="sum-label">Submitted</div>
+                </div>
+                <div class="sum-card">
+                    <div class="sum-icon">🔴</div>
+                    <div class="sum-val danger" id="urgentCount">--</div>
+                    <div class="sum-label">Due in 3 Days</div>
+                </div>
+            </div>
+
+            <!-- Assignments list (sorted by Min Heap) -->
+            <div id="assignmentsList" class="assignments-list">
+                <!-- Filled by JS -->
+            </div>
+
+        </div>
+
+        <!-- ===== TAB: EXAMS ===== -->
+        <div class="tab-panel" id="tab-exams">
+            <div class="summary-grid" style="margin-bottom:24px;">
+                <div class="sum-card">
+                    <div class="sum-icon">📅</div>
+                    <div class="sum-val" id="totalExams">--</div>
+                    <div class="sum-label">Total Exams</div>
+                </div>
+                <div class="sum-card">
+                    <div class="sum-icon">⏰</div>
+                    <div class="sum-val danger" id="nextExamDays">--</div>
+                    <div class="sum-label">Days to Next Exam</div>
+                </div>
+                <div class="sum-card">
+                    <div class="sum-icon">🎯</div>
+                    <div class="sum-val" id="nextExamName">--</div>
+                    <div class="sum-label" style="font-size:.65rem">Next Subject</div>
+                </div>
+                <div class="sum-card">
+                    <div class="sum-icon">📈</div>
+                    <div class="sum-val">6</div>
+                    <div class="sum-label">This Semester</div>
+                </div>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="exam-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Subject</th>
+                            <th>Code</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Room</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="examsBody">
+                        <!-- Filled by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ===== TAB: HISTORY (Linked List) ===== -->
+        <div class="tab-panel" id="tab-history">
+            <div class="linked-list-note">
+                // LinkedList — head → most recent submission → ... → null
+            </div>
+            <div id="historyList" class="history-list">
+                <!-- Filled by JS -->
+            </div>
+        </div>
+
+    </div><!-- end main-container -->
+
+    <footer class="footer">
+        © 2026 GEHU Connect | Module: Manisha — Assignments &amp; Deadline Manager | DSA: Min Heap + Linked List
+    </footer>
+
+    <script src="../JavaScript/assignments.js"></script>
+</body>
+</html>

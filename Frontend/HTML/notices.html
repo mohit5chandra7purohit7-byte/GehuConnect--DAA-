@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notice Board — GEHU Connect</title>
+    <link rel="stylesheet" href="../CSS/notices.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-inner">
+            <div class="logo">
+                <a href="student_dashboard.html">← Dashboard</a>
+                <span class="sep">|</span>
+                <h1>GEHU Connect</h1>
+            </div>
+            <div class="student-badge">
+                <span id="studentNameBadge">Loading...</span>
+                <span class="roll-badge" id="rollBadge">—</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Title -->
+    <div class="page-title">
+        <h2>📢 Notice Board</h2>
+        <p class="subtitle">DSA: <strong>Trie</strong> for instant prefix search · <strong>Stack</strong> tracks recently viewed (LIFO)</p>
+    </div>
+
+    <div class="main-container">
+
+        <!-- Search bar -->
+        <div class="search-wrap">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput"
+                   placeholder="Search notices… try 'exam', 'fest', 'holiday'" autocomplete="off">
+        </div>
+
+        <!-- Category filter pills -->
+        <div class="category-pills">
+            <button class="pill active" data-cat="All">All</button>
+            <button class="pill" data-cat="Examination">📝 Examination</button>
+            <button class="pill" data-cat="Academic">🎓 Academic</button>
+            <button class="pill" data-cat="Event">🎉 Event</button>
+            <button class="pill" data-cat="Holiday">🏖️ Holiday</button>
+            <button class="pill" data-cat="General">📌 General</button>
+        </div>
+
+        <!-- Two-column layout -->
+        <div class="layout">
+            <!-- Left: Notice cards -->
+            <div>
+                <div id="noticesList" class="notices-list">
+                    <!-- Filled by JS -->
+                </div>
+            </div>
+
+            <!-- Right: Recently Viewed (Stack) -->
+            <div class="recent-panel">
+                <h3>🕐 Recently Viewed</h3>
+                <p class="recent-sub">// Stack — LIFO, max 5</p>
+                <div id="recentList">
+                    <p class="recent-empty">No notices viewed yet.<br>Click any notice to read it.</p>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- end main-container -->
+
+    <!-- Notice Detail Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-box">
+            <div class="modal-top">
+                <div class="modal-title" id="modalTitle"></div>
+                <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
+            </div>
+            <div class="modal-meta" id="modalMeta"></div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        © 2026 GEHU Connect | Module: Shyamali — Notices &amp; Clubs | DSA: Trie + Stack
+    </footer>
+
+    <script src="../JavaScript/notices.js"></script>
+</body>
+</html>

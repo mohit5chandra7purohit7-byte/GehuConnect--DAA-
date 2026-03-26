@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clubs — GEHU Connect</title>
+    <link rel="stylesheet" href="../CSS/notices.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-inner">
+            <div class="logo">
+                <a href="student_dashboard.html">← Dashboard</a>
+                <span class="sep">|</span>
+                <h1>GEHU Connect</h1>
+            </div>
+            <div class="student-badge">
+                <span id="studentNameBadge">Loading...</span>
+                <span class="roll-badge" id="rollBadge">—</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Title -->
+    <div class="page-title">
+        <h2>🎭 Clubs &amp; Societies</h2>
+        <p class="subtitle">Browse active clubs · check vacancies · apply to join</p>
+    </div>
+
+    <div class="main-container">
+
+        <!-- Search -->
+        <div class="search-wrap" style="margin-bottom:20px;">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" placeholder="Search clubs…" autocomplete="off">
+        </div>
+
+        <!-- Filter pills -->
+        <div class="category-pills">
+            <button class="pill active" data-filter="all">All Clubs</button>
+            <button class="pill" data-filter="open">🟢 Open Spots</button>
+            <button class="pill" data-filter="limited">🟡 Limited Spots</button>
+            <button class="pill" data-filter="full">🔴 Full</button>
+        </div>
+
+        <!-- Clubs grid -->
+        <div class="clubs-grid" id="clubsGrid">
+            <!-- Filled by JS -->
+        </div>
+
+    </div>
+
+    <!-- Application confirmation modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-box">
+            <div class="modal-top">
+                <div class="modal-title" id="modalTitle">Apply to Club</div>
+                <button class="modal-close" id="modalClose">✕</button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+            <div style="margin-top:16px;display:flex;gap:10px;">
+                <button id="confirmApply" style="flex:1;padding:9px;background:linear-gradient(135deg,#6c63ff,#00d4ff);color:#fff;border:none;border-radius:8px;font-size:.9rem;font-weight:600;cursor:pointer;font-family:inherit;">✅ Confirm Application</button>
+                <button id="cancelApply" style="flex:1;padding:9px;background:#20243a;color:#e2e8f0;border:1px solid #2d3352;border-radius:8px;font-size:.9rem;cursor:pointer;font-family:inherit;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        © 2026 GEHU Connect | Module: Shyamali — Notices &amp; Clubs
+    </footer>
+
+    <script src="../JavaScript/clubs.js"></script>
+</body>
+</html>

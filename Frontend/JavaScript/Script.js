@@ -25,8 +25,9 @@ const quotes = [
 let currentCaptcha = '';
 
 // ===== BACKEND API URL =====
-// Change this to your actual backend URL
-const API_URL = 'http://localhost:8080/gehu-connect/login';
+// Phase 2: No server running — login uses demo fallback below
+// Phase 3: Change this to your Flask API URL, e.g. http://127.0.0.1:5000/api/login
+const API_URL = 'http://localhost:5000/api/login';
 
 // ===== GENERATE RANDOM QUOTE =====
 function generateQuote() {

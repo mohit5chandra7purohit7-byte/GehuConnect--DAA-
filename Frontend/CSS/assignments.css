@@ -1,0 +1,174 @@
+/* ============================================================
+   assignments.css — Manisha's Module (Assignments + Exams)
+   GEHU Connect — Phase 2
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+    --bg:        #0f1117;
+    --bg-card:   #1a1d27;
+    --bg-card2:  #20243a;
+    --accent:    #6c63ff;
+    --accent2:   #00d4ff;
+    --safe:      #22c55e;
+    --danger:    #ef4444;
+    --warn:      #f59e0b;
+    --text:      #e2e8f0;
+    --muted:     #8892a4;
+    --border:    #2d3352;
+    --radius:    12px;
+    --shadow:    0 4px 24px rgba(0,0,0,0.4);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* ===== HEADER ===== */
+.header { background: var(--bg-card); border-bottom: 1px solid var(--border); padding: 14px 24px; position: sticky; top: 0; z-index: 100; }
+.header-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+.logo { display: flex; align-items: center; gap: 14px; }
+.logo a { color: var(--accent2); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: opacity .2s; }
+.logo a:hover { opacity: .7; }
+.sep { color: var(--border); }
+.logo h1 { font-size: 1.2rem; font-weight: 700; }
+.student-badge { display: flex; align-items: center; gap: 10px; }
+.student-badge span { font-size: 0.9rem; font-weight: 500; }
+.roll-badge { background: var(--accent); color: #fff; padding: 3px 10px; border-radius: 20px; font-size: 0.78rem; font-weight: 600; }
+
+/* ===== PAGE TITLE ===== */
+.page-title { max-width: 1100px; margin: 32px auto 0; padding: 0 24px; }
+.page-title h2 { font-size: 1.7rem; font-weight: 700; }
+.subtitle { margin-top: 6px; color: var(--muted); font-size: 0.93rem; }
+
+/* ===== MAIN CONTAINER ===== */
+.main-container { max-width: 1100px; margin: 24px auto 60px; padding: 0 24px; }
+
+/* ===== TABS ===== */
+.tabs { display: flex; gap: 4px; margin-bottom: 24px; border-bottom: 1px solid var(--border); }
+.tab-btn {
+    background: none; border: none; border-bottom: 3px solid transparent;
+    padding: 10px 18px; font-family: inherit; font-size: 0.9rem; font-weight: 500;
+    color: var(--muted); cursor: pointer; transition: color .15s, border-color .15s;
+    margin-bottom: -1px;
+}
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ===== SUMMARY CARDS (reused) ===== */
+.summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+@media (max-width: 700px) { .summary-grid { grid-template-columns: repeat(2, 1fr); } }
+.sum-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px; text-align: center; box-shadow: var(--shadow);
+    transition: transform .2s, border-color .2s;
+}
+.sum-card:hover { transform: translateY(-3px); border-color: var(--accent); }
+.sum-icon { font-size: 1.6rem; margin-bottom: 8px; }
+.sum-val { font-size: 1.6rem; font-weight: 700; }
+.sum-val.danger { color: var(--danger); }
+.sum-val.safe   { color: var(--safe); }
+.sum-val.warn   { color: var(--warn); }
+.sum-label { font-size: 0.78rem; color: var(--muted); margin-top: 4px; }
+
+/* ===== ASSIGNMENT CARDS ===== */
+.assignments-list { display: flex; flex-direction: column; gap: 12px; }
+.assign-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 18px 20px; box-shadow: var(--shadow);
+    transition: border-color .18s, transform .15s;
+    position: relative; overflow: hidden;
+}
+.assign-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.assign-card.urgent { border-left: 3px solid var(--danger); }
+.assign-card.submitted { border-left: 3px solid var(--safe); }
+
+.assign-top {
+    display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 8px;
+}
+.assign-title { font-size: 0.95rem; font-weight: 600; line-height: 1.4; flex: 1; }
+
+.status-badge {
+    font-size: 0.7rem; font-weight: 600; padding: 3px 9px; border-radius: 4px; white-space: nowrap; flex-shrink: 0;
+}
+.status-badge.pending   { background: rgba(245,158,11,.12); color: var(--warn);   border: 1px solid rgba(245,158,11,.25); }
+.status-badge.submitted { background: rgba(34,197,94,.12);  color: var(--safe);   border: 1px solid rgba(34,197,94,.25); }
+.status-badge.overdue   { background: rgba(239,68,68,.12);  color: var(--danger); border: 1px solid rgba(239,68,68,.25); }
+
+.assign-meta { display: flex; gap: 16px; flex-wrap: wrap; font-size: 0.8rem; color: var(--muted); margin-bottom: 10px; }
+.assign-meta span { display: flex; align-items: center; gap: 4px; }
+.code-tag { font-family: 'JetBrains Mono', monospace; color: var(--accent2); font-size: 0.8rem; }
+
+.deadline-bar { height: 4px; background: var(--bg-card2); border-radius: 2px; overflow: hidden; margin-bottom: 8px; }
+.deadline-fill { height: 100%; border-radius: 2px; transition: width 0.4s; }
+.deadline-fill.safe   { background: var(--safe); }
+.deadline-fill.warn   { background: var(--warn); }
+.deadline-fill.danger { background: var(--danger); }
+
+.days-badge {
+    font-size: 0.78rem; font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+}
+.days-badge.safe   { color: var(--safe); }
+.days-badge.warn   { color: var(--warn); }
+.days-badge.danger { color: var(--danger); }
+.days-badge.done   { color: var(--muted); }
+
+/* ===== EXAMS TABLE ===== */
+.table-wrapper {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: auto; box-shadow: var(--shadow);
+}
+.exam-table { width: 100%; border-collapse: collapse; min-width: 560px; }
+.exam-table thead th {
+    background: var(--bg-card2);
+    padding: 13px 16px; text-align: left;
+    font-size: 0.78rem; font-weight: 600; letter-spacing: .04em;
+    color: var(--muted); text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+}
+.exam-table tbody tr { border-bottom: 1px solid var(--border); transition: background .15s; }
+.exam-table tbody tr:hover { background: rgba(108,99,255,0.06); }
+.exam-table tbody tr:last-child { border-bottom: none; }
+.exam-table td { padding: 13px 16px; font-size: 0.88rem; vertical-align: middle; }
+.exam-date  { font-weight: 600; color: var(--accent2); }
+.exam-code  { font-family: 'JetBrains Mono', monospace; color: var(--accent2); font-size: 0.82rem; }
+.exam-time  { font-size: 0.82rem; color: var(--muted); }
+.exam-room  { font-size: 0.82rem; color: var(--muted); }
+.days-left-badge {
+    font-size: 0.74rem; font-weight: 600; padding: 3px 9px; border-radius: 20px;
+}
+.days-left-badge.soon { background: rgba(239,68,68,.12); color: var(--danger); border: 1px solid rgba(239,68,68,.25); }
+.days-left-badge.near { background: rgba(245,158,11,.12); color: var(--warn);   border: 1px solid rgba(245,158,11,.25); }
+.days-left-badge.ok   { background: rgba(34,197,94,.12);  color: var(--safe);   border: 1px solid rgba(34,197,94,.25); }
+
+/* ===== SUBMISSION HISTORY (Linked List) ===== */
+.history-list { display: flex; flex-direction: column; gap: 0; }
+.history-item {
+    display: flex; align-items: flex-start; gap: 16px;
+    padding: 14px 0; position: relative;
+}
+.history-item:not(:last-child)::after {
+    content: ''; position: absolute; left: 13px; top: 36px;
+    width: 2px; height: calc(100% - 12px); background: var(--border);
+}
+.history-dot {
+    width: 28px; height: 28px; min-width: 28px; border-radius: 50%;
+    background: var(--bg-card); border: 2px solid var(--safe);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.72rem; color: var(--safe); font-weight: 700; z-index: 1;
+}
+.history-content { flex: 1; }
+.history-title { font-size: 0.9rem; font-weight: 600; margin-bottom: 3px; }
+.history-meta  { font-size: 0.78rem; color: var(--muted); display: flex; gap: 10px; flex-wrap: wrap; }
+.linked-list-note {
+    background: rgba(108,99,255,0.06); border: 1px dashed rgba(108,99,255,0.3);
+    border-radius: var(--radius); padding: 12px 16px;
+    font-size: 0.8rem; color: var(--muted); margin-bottom: 16px;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* ===== FOOTER ===== */
+.footer { text-align: center; padding: 20px; font-size: 0.78rem; color: var(--muted); border-top: 1px solid var(--border); }
