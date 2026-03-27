@@ -10,8 +10,8 @@
 |---|---|---|---|
 | Maitri Goyal *(Lead)* | 2418628 | Login & Authentication | HashMap (`unordered_map`) |
 | Mohit Chandra Purohit | 2419260 | Attendance Tracker | Merge Sort |
-| Manisha Bisht | 2419475 | Assignments & Exams | Min Heap + Linked List |
-| Shyamali Bisht | 2418996 | Notices | Trie + Stack (LIFO) |
+| Manisha Bisht | 2419475 | Assignments | Min Heap |
+| Shyamali Bisht | 2418996 | Notices | Trie |
 
 ---
 
@@ -19,108 +19,96 @@
 
 ```
 GehuConnect--DAA-/
+├── app.py                          # Flask server (SQLite + C++ integration)
+├── gehuconnect.db                  # SQLite database (auto-created on first run)
+├── .gitignore
 ├── Frontend/
-│   ├── HTML/
-│   │   ├── index.html              # Login page
-│   │   ├── student_dashboard.html  # Main dashboard
-│   │   ├── attendance.html
-│   │   ├── assignments.html
-│   │   ├── notices.html
-│   │   └── clubs.html
-│   ├── CSS/
-│   │   ├── Style.css               # Login styles
-│   │   ├── dashboard.css
-│   │   ├── attendance.css
-│   │   ├── assignments.css
-│   │   └── notices.css
-│   └── JavaScript/
-│       ├── Script.js               # Login logic
-│       ├── dashboard.js
-│       ├── attendance.js
-│       ├── assignments.js
-│       ├── notices.js
-│       └── clubs.js
-├── Backend/                        # C++ console demos (DSA concepts)
-│   ├── login.cpp / login.exe
-│   ├── attendance.cpp / attendance.exe
-│   ├── assignments.cpp / assignments.exe
-│   └── notices.cpp / notices.exe
-└── Data/
-    └── attendance.txt              # Sample attendance data
+│   └── HTML/
+│       ├── index.html              # Login page
+│       ├── student_dashboard.html  # Main dashboard
+│       ├── attendance.html         # Attendance tracker
+│       ├── assignments.html        # Assignments viewer
+│       └── notices.html            # Notices board
+└── Backend/                        # C++ modules (DSA logic)
+    ├── login.cpp
+    ├── attendance.cpp
+    ├── assignments.cpp
+    └── notices.cpp
 ```
 
 ---
 
-## 📦 Modules & DSA Concepts
+## ✅ Phase 2 Deliverables
 
-### 🔐 Login — Maitri Goyal
-- **DSA:** `HashMap` (`unordered_map<rollNo, Student>`)
-- **O(1)** average-case lookup by Roll Number
-- Stores complete student profile; supports File I/O (saves session to `.txt`)
-- **C++ Concepts:** Class, Constructor/Destructor, File I/O
+### 🔧 Backend — Flask + SQLite
+- **`app.py`** — Minimal Flask server with 4 REST API routes
+- **SQLite database** (`gehuconnect.db`) auto-created on startup with seeded data
+- Each route queries SQLite → writes to `input.txt` → compiles & runs the `.cpp` via `g++` → captures JSON stdout → returns to frontend
+- Routes:
+  - `GET /login?id=STUDENTID`
+  - `GET /attendance?id=STUDENTID`
+  - `GET /notices?category=all`
+  - `GET /assignments?id=STUDENTID`
 
-### 📊 Attendance — Mohit Chandra Purohit
-- **DSA:** `Merge Sort` — sorts subjects by attendance percentage
-- Low-attendance subjects (< 75%) flagged with ⚠ warning
-- Built-in **Recovery Predictor** — calculates how many consecutive classes are needed to reach 75%
-- **C++ Concepts:** Struct, Operator Overloading, Vectors, Functions
+### 🖥️ Frontend — 5 HTML Pages
+| Page | What it shows |
+|---|---|
+| `index.html` | Student ID login form |
+| `student_dashboard.html` | Name, ID, Branch, CGPA, Hostel, Room, Phone |
+| `attendance.html` | Subject-wise attendance % with ⚠ WARNING if < 75% |
+| `notices.html` | Notice board with category dropdown filter |
+| `assignments.html` | Assignments sorted by nearest due date, first row highlighted |
 
-### 📋 Assignments & Exams — Manisha Bisht
-- **DSA 1:** `Min Heap` — pending assignments sorted by nearest deadline (`O(log n)` insert/extract)
-- **DSA 2:** `Singly Linked List` — submission history (`O(1)` prepend, newest first)
-- **C++ Concepts:** Inheritance (`AcademicItem` → `Assignment`, `Exam`), Virtual Functions, Templates, Polymorphism
-
-### 📢 Notices — Shyamali Bisht
-- **DSA 1:** `Trie` — prefix-based full-text search over notice titles, categories, and content (`O(L)`)
-- **DSA 2:** `Stack (LIFO)` — tracks up to 5 recently viewed notices
-- **C++ Concepts:** Struct/Class, String tokenization, `unordered_map` for Trie children
+### ⚙️ C++ Backend Modules (DSA)
+| File | Member | DSA | Working Part |
+|---|---|---|---|
+| `login.cpp` | Maitri | HashMap (`unordered_map`) | O(1) lookup — reads input, prints student JSON |
+| `attendance.cpp` | Mohit | Merge Sort | Bubble sort works; `mergeSort()` structure present |
+| `notices.cpp` | Shyamali | Trie | Linear filter works; `insert()` complete |
+| `assignments.cpp` | Manisha | Min Heap | Date sort works; `heapify()` complete |
 
 ---
 
-## 🚀 Getting Started
+## 🔲 Phase 3 Pending
 
-### Frontend (Browser)
-Just open any HTML file directly in a browser — no server required.
+### DSA Completions
+| File | Pending |
+|---|---|
+| `login.cpp` | `validateSession()` — session/token logic |
+| `attendance.cpp` | `mergeSort()` — recursive calls + `merge()` connection missing; `predictClasses()` return statement missing |
+| `notices.cpp` | `Trie::search()` — only 2 lines written, full traversal missing |
+| `assignments.cpp` | `MinHeap::insert()` — bubble-up loop missing |
 
+### Feature Additions
+- Replace `inputed.txt` pipeline with direct C++ ↔ Python integration (or full Python backend)
+- User authentication with session tokens
+- Add/Edit student records from the dashboard
+- Club module (`clubs.html`) integration
+- Mobile-responsive UI
+
+---
+
+## 🚀 How to Run
+
+### Prerequisites
+- Python 3.x
+- `g++` compiler
+- `pip install flask flask-cors`
+
+### Start the Server
 ```bash
-# Start from the login page
-Frontend/HTML/index.html
+cd GehuConnect--DAA-
+python app.py
 ```
+Then open: **http://localhost:5000**
 
-### Backend (C++ Console Demos)
-
-**Prerequisites:** A C++ compiler (`g++`)
-
-```bash
-# Compile any module
-g++ Backend/login.cpp       -o Backend/login
-g++ Backend/attendance.cpp  -o Backend/attendance
-g++ Backend/assignments.cpp -o Backend/assignments
-g++ Backend/notices.cpp     -o Backend/notices
-
-# Run (Linux / Git Bash)
-./Backend/login
-./Backend/attendance
-./Backend/assignments
-./Backend/notices
-
-# Run (Windows CMD)
-Backend\login.exe
-Backend\attendance.exe
-Backend\assignments.exe
-Backend\notices.exe
-```
-
----
-
-## 🔑 Demo Credentials
-
-| Roll No | Password |
-|---------|----------|
-| 2418628 | 2418628  |
-| 2419260 | 2419260  |
-| 2419475 | 2419475  |
-| 2418996 | 2418996  |
+### Demo Login IDs
+| Name | Roll No (= Password) |
+|---|---|
+| Mohit Purohit | `2419260` |
+| Maitri Goyal | `2418628` |
+| Manisha Bisht | `2419475` |
+| Shyamali Bisht | `2418996` |
 
 ---
 
@@ -128,9 +116,10 @@ Backend\notices.exe
 
 | Layer | Technology |
 |---|---|
-| Frontend | HTML5, CSS3, Vanilla JavaScript |
-| Backend (DSA Demo) | C++17 (STL) |
-| Data | Flat text files (`.txt`) |
+| Frontend | HTML5, Vanilla CSS, Vanilla JavaScript |
+| Backend API | Python 3 — Flask, Flask-CORS |
+| Database | SQLite (`sqlite3` built-in, auto-created) |
+| DSA Logic | C++17 (STL) — compiled at runtime via `g++` |
 
 ---
 
@@ -139,8 +128,8 @@ Backend\notices.exe
 | Phase | Status | Description |
 |---|---|---|
 | Phase 1 | ✅ Done | Project structure, Login UI, basic routing |
-| Phase 2 | ✅ Done | All student modules with hardcoded data + DSA backends |
-| Phase 3 | 🔲 Planned | Database integration, dynamic data, backend API |
+| Phase 2 | ✅ Done | Flask + SQLite backend, 4 CPP DSA modules, 5 live HTML pages |
+| Phase 3 | 🔲 Planned | Complete DSA stubs, session auth, dynamic data, clubs module |
 
 ---
 
