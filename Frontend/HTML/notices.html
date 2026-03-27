@@ -1,90 +1,82 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notice Board — GEHU Connect</title>
-    <link rel="stylesheet" href="../CSS/notices.css">
+    <title>GehuConnect - Notices</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f0f0f0; margin: 0; padding: 20px; }
+        .container { max-width: 650px; margin: 0 auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        h2 { color: #2c3e50; }
+        select { padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
+        ul { list-style: none; padding: 0; margin-top: 15px; }
+        li { padding: 12px; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 8px; background: #fafafa; }
+        li.urgent { font-weight: bold; border-left: 4px solid red; }
+        .tag { font-size: 11px; background: #2980b9; color: white; padding: 2px 7px; border-radius: 10px; margin-left: 8px; }
+        .tag.urgent { background: red; }
+        .date { font-size: 12px; color: #999; margin-top: 4px; }
+        .back { display: inline-block; margin-top: 15px; padding: 8px 14px; background: #7f8c8d; color: white; text-decoration: none; border-radius: 4px; }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <h2>Notices</h2>
 
-    <!-- Header -->
-    <header class="header">
-        <div class="header-inner">
-            <div class="logo">
-                <a href="student_dashboard.html">← Dashboard</a>
-                <span class="sep">|</span>
-                <h1>GEHU Connect</h1>
-            </div>
-            <div class="student-badge">
-                <span id="studentNameBadge">Loading...</span>
-                <span class="roll-badge" id="rollBadge">—</span>
-            </div>
-        </div>
-    </header>
+        <label>Filter by category:
+            <select id="cat-filter" onchange="filterNotices()">
+                <option value="all">All</option>
+                <option value="Fee">Fee</option>
+                <option value="Event">Event</option>
+                <option value="Exam">Exam</option>
+                <option value="Academic">Academic</option>
+            </select>
+        </label>
 
-    <!-- Page Title -->
-    <div class="page-title">
-        <h2>📢 Notice Board</h2>
-        <p class="subtitle">DSA: <strong>Trie</strong> for instant prefix search · <strong>Stack</strong> tracks recently viewed (LIFO)</p>
+        <ul id="notice-list">
+            <li>Loading...</li>
+        </ul>
+
+        <a href="student_dashboard.html" class="back">← Back to Dashboard</a>
     </div>
 
-    <div class="main-container">
+    <script>
+        var allNotices = [];
 
-        <!-- Search bar -->
-        <div class="search-wrap">
-            <span class="search-icon">🔍</span>
-            <input type="text" id="searchInput"
-                   placeholder="Search notices… try 'exam', 'fest', 'holiday'" autocomplete="off">
-        </div>
+        fetch("http://localhost:5000/notices?category=all")
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                allNotices = data;
+                renderNotices(allNotices);
+            })
+            .catch(function() {
+                document.getElementById("notice-list").innerHTML = "<li>Failed to load notices.</li>";
+            });
 
-        <!-- Category filter pills -->
-        <div class="category-pills">
-            <button class="pill active" data-cat="All">All</button>
-            <button class="pill" data-cat="Examination">📝 Examination</button>
-            <button class="pill" data-cat="Academic">🎓 Academic</button>
-            <button class="pill" data-cat="Event">🎉 Event</button>
-            <button class="pill" data-cat="Holiday">🏖️ Holiday</button>
-            <button class="pill" data-cat="General">📌 General</button>
-        </div>
+        function filterNotices() {
+            var selected = document.getElementById("cat-filter").value;
+            if (selected === "all") {
+                renderNotices(allNotices);
+            } else {
+                var filtered = allNotices.filter(function(n) { return n.category === selected; });
+                renderNotices(filtered);
+            }
+        }
 
-        <!-- Two-column layout -->
-        <div class="layout">
-            <!-- Left: Notice cards -->
-            <div>
-                <div id="noticesList" class="notices-list">
-                    <!-- Filled by JS -->
-                </div>
-            </div>
-
-            <!-- Right: Recently Viewed (Stack) -->
-            <div class="recent-panel">
-                <h3>🕐 Recently Viewed</h3>
-                <p class="recent-sub">// Stack — LIFO, max 5</p>
-                <div id="recentList">
-                    <p class="recent-empty">No notices viewed yet.<br>Click any notice to read it.</p>
-                </div>
-            </div>
-        </div>
-
-    </div><!-- end main-container -->
-
-    <!-- Notice Detail Modal -->
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal-box">
-            <div class="modal-top">
-                <div class="modal-title" id="modalTitle"></div>
-                <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
-            </div>
-            <div class="modal-meta" id="modalMeta"></div>
-            <div class="modal-body" id="modalBody"></div>
-        </div>
-    </div>
-
-    <footer class="footer">
-        © 2026 GEHU Connect | Module: Shyamali — Notices &amp; Clubs | DSA: Trie + Stack
-    </footer>
-
-    <script src="../JavaScript/notices.js"></script>
+        function renderNotices(list) {
+            var ul = document.getElementById("notice-list");
+            ul.innerHTML = "";
+            if (list.length === 0) {
+                ul.innerHTML = "<li>No notices in this category.</li>";
+                return;
+            }
+            for (var i = 0; i < list.length; i++) {
+                var n = list[i];
+                var li = document.createElement("li");
+                if (n.urgency === "urgent") li.className = "urgent";
+                li.innerHTML = n.title
+                    + "<span class='tag " + n.urgency + "'>" + n.category + "</span>"
+                    + "<div class='date'>" + n.date + "</div>";
+                ul.appendChild(li);
+            }
+        }
+    </script>
 </body>
 </html>

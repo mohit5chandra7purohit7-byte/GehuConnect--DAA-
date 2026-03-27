@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# SQLite database (auto-created on first run)
+*.db
+
+# Compiled C++ binaries
+*.exe
+*.out
+
+# Temp input file written by Flask
+Backend/input.txt
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db

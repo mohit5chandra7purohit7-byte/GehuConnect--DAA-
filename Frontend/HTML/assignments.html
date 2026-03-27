@@ -1,138 +1,63 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assignments &amp; Exams — GEHU Connect</title>
-    <link rel="stylesheet" href="../CSS/assignments.css">
+    <title>GehuConnect - Assignments</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f0f0f0; margin: 0; padding: 20px; }
+        .container { max-width: 650px; margin: 0 auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        h2 { color: #2c3e50; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th { background: #2980b9; color: white; padding: 10px; text-align: left; }
+        td { padding: 10px; border: 1px solid #ddd; }
+        tr:nth-child(even) { background: #f9f9f9; }
+        tr.most-urgent { background: #ffeaa7 !important; font-weight: bold; }
+        .back { display: inline-block; margin-top: 15px; padding: 8px 14px; background: #7f8c8d; color: white; text-decoration: none; border-radius: 4px; }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <h2>Assignments</h2>
+        <p style="font-size:13px; color:#999;">⚡ Sorted by nearest due date first. Highlighted row = most urgent.</p>
+        <p id="status" style="color:#777;">Loading...</p>
 
-    <!-- Header -->
-    <header class="header">
-        <div class="header-inner">
-            <div class="logo">
-                <a href="student_dashboard.html">← Dashboard</a>
-                <span class="sep">|</span>
-                <h1>GEHU Connect</h1>
-            </div>
-            <div class="student-badge">
-                <span id="studentNameBadge">Loading...</span>
-                <span class="roll-badge" id="rollBadge">—</span>
-            </div>
-        </div>
-    </header>
+        <table id="asgn-table" style="display:none;">
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Assignment Title</th>
+                    <th>Due Date</th>
+                </tr>
+            </thead>
+            <tbody id="asgn-body"></tbody>
+        </table>
 
-    <!-- Page Title -->
-    <div class="page-title">
-        <h2>📝 Assignments &amp; Exams</h2>
-        <p class="subtitle">DSA: <strong style="color:var(--accent2)">Min Heap</strong> — nearest deadline always on top · <strong style="color:var(--accent2)">Linked List</strong> — submission history</p>
+        <a href="student_dashboard.html" class="back">← Back to Dashboard</a>
     </div>
 
-    <div class="main-container">
+    <script>
+        var student = JSON.parse(sessionStorage.getItem("student"));
+        if (!student) { window.location.href = "index.html"; }
 
-        <!-- Tabs -->
-        <div class="tabs">
-            <button class="tab-btn active" data-tab="assignments">📋 Assignments</button>
-            <button class="tab-btn" data-tab="exams">📅 Exam Schedule</button>
-            <button class="tab-btn" data-tab="history">🕐 Submission History</button>
-        </div>
+        fetch("http://localhost:5000/assignments?id=" + student.id)
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                document.getElementById("status").style.display = "none";
+                document.getElementById("asgn-table").style.display = "table";
 
-        <!-- ===== TAB: ASSIGNMENTS ===== -->
-        <div class="tab-panel active" id="tab-assignments">
+                var tbody = document.getElementById("asgn-body");
+                tbody.innerHTML = "";
 
-            <!-- Summary cards -->
-            <div class="summary-grid">
-                <div class="sum-card">
-                    <div class="sum-icon">📋</div>
-                    <div class="sum-val" id="totalAssign">--</div>
-                    <div class="sum-label">Total Assignments</div>
-                </div>
-                <div class="sum-card">
-                    <div class="sum-icon">⏳</div>
-                    <div class="sum-val warn" id="pendingCount">--</div>
-                    <div class="sum-label">Pending</div>
-                </div>
-                <div class="sum-card">
-                    <div class="sum-icon">✅</div>
-                    <div class="sum-val safe" id="submittedCount">--</div>
-                    <div class="sum-label">Submitted</div>
-                </div>
-                <div class="sum-card">
-                    <div class="sum-icon">🔴</div>
-                    <div class="sum-val danger" id="urgentCount">--</div>
-                    <div class="sum-label">Due in 3 Days</div>
-                </div>
-            </div>
-
-            <!-- Assignments list (sorted by Min Heap) -->
-            <div id="assignmentsList" class="assignments-list">
-                <!-- Filled by JS -->
-            </div>
-
-        </div>
-
-        <!-- ===== TAB: EXAMS ===== -->
-        <div class="tab-panel" id="tab-exams">
-            <div class="summary-grid" style="margin-bottom:24px;">
-                <div class="sum-card">
-                    <div class="sum-icon">📅</div>
-                    <div class="sum-val" id="totalExams">--</div>
-                    <div class="sum-label">Total Exams</div>
-                </div>
-                <div class="sum-card">
-                    <div class="sum-icon">⏰</div>
-                    <div class="sum-val danger" id="nextExamDays">--</div>
-                    <div class="sum-label">Days to Next Exam</div>
-                </div>
-                <div class="sum-card">
-                    <div class="sum-icon">🎯</div>
-                    <div class="sum-val" id="nextExamName">--</div>
-                    <div class="sum-label" style="font-size:.65rem">Next Subject</div>
-                </div>
-                <div class="sum-card">
-                    <div class="sum-icon">📈</div>
-                    <div class="sum-val">6</div>
-                    <div class="sum-label">This Semester</div>
-                </div>
-            </div>
-
-            <div class="table-wrapper">
-                <table class="exam-table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Subject</th>
-                            <th>Code</th>
-                            <th>Date</th>
-                            <th>Time</th>
-                            <th>Room</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="examsBody">
-                        <!-- Filled by JS -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- ===== TAB: HISTORY (Linked List) ===== -->
-        <div class="tab-panel" id="tab-history">
-            <div class="linked-list-note">
-                // LinkedList — head → most recent submission → ... → null
-            </div>
-            <div id="historyList" class="history-list">
-                <!-- Filled by JS -->
-            </div>
-        </div>
-
-    </div><!-- end main-container -->
-
-    <footer class="footer">
-        © 2026 GEHU Connect | Module: Manisha — Assignments &amp; Deadline Manager | DSA: Min Heap + Linked List
-    </footer>
-
-    <script src="../JavaScript/assignments.js"></script>
+                for (var i = 0; i < data.length; i++) {
+                    var a = data[i];
+                    var tr = document.createElement("tr");
+                    if (i === 0) tr.className = "most-urgent";  // first row highlighted
+                    tr.innerHTML = "<td>" + a.subject + "</td><td>" + a.title + "</td><td>" + a.due_date + "</td>";
+                    tbody.appendChild(tr);
+                }
+            })
+            .catch(function() {
+                document.getElementById("status").innerText = "Failed to load assignments.";
+            });
+    </script>
 </body>
 </html>

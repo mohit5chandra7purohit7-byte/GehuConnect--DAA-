@@ -1,125 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Dashboard — GEHU Connect</title>
-    <link rel="stylesheet" href="../CSS/dashboard.css">
+    <title>GehuConnect - Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f0f0f0; margin: 0; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        h2 { color: #2c3e50; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        td { padding: 10px; border: 1px solid #ddd; }
+        td:first-child { background: #ecf0f1; font-weight: bold; width: 40%; }
+        .nav { margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
+        .nav a { padding: 10px 16px; background: #2980b9; color: white; text-decoration: none; border-radius: 4px; font-size: 14px; }
+        .nav a:hover { background: #1a6298; }
+        .logout { background: #e74c3c !important; }
+        .logout:hover { background: #c0392b !important; }
+    </style>
 </head>
-
 <body>
+    <div class="container">
+        <h2>Student Dashboard</h2>
+        <p id="welcome" style="color:#777;"></p>
 
-    <!-- ===== TOP NAV BAR ===== -->
-    <nav class="topnav">
-        <div class="nav-logo">GEHU Connect</div>
-        <button class="hamburger" id="hamburgerBtn" aria-label="Open menu">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
-    </nav>
+        <table>
+            <tr><td>Name</td><td id="s-name">-</td></tr>
+            <tr><td>Student ID</td><td id="s-id">-</td></tr>
+            <tr><td>Branch</td><td id="s-branch">-</td></tr>
+            <tr><td>CGPA</td><td id="s-cgpa">-</td></tr>
+            <tr><td>Hostel</td><td id="s-hostel">-</td></tr>
+            <tr><td>Room</td><td id="s-room">-</td></tr>
+            <tr><td>Phone</td><td id="s-phone">-</td></tr>
+        </table>
 
-    <!-- ===== SLIDE-IN SIDEBAR MENU ===== -->
-    <div class="sidebar-overlay" id="overlay"></div>
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <span>Navigation</span>
-            <button class="close-btn" id="closeBtn">✕</button>
+        <div class="nav">
+            <a href="attendance.html">Attendance</a>
+            <a href="notices.html">Notices</a>
+            <a href="assignments.html">Assignments</a>
+            <a href="#" class="logout" onclick="logout()">Logout</a>
         </div>
-        <ul class="sidebar-nav">
-            <li class="active"><a href="student_dashboard.html">🏠 Home</a></li>
-            <li><a href="attendance.html">📊 Attendance</a></li>
-            <li><a href="notices.html">📢 Notices</a></li>
-            <li><a href="clubs.html">🎭 Clubs &amp; Events</a></li>
-            <li><a href="assignments.html">📝 Assignments &amp; Exams</a></li>
-            <li class="soon"><a href="#">💰 Fee Payment <span class="tag">Soon</span></a></li>
-            <li class="soon"><a href="#">🏠 Hostel <span class="tag">Soon</span></a></li>
-            <li class="soon"><a href="#">📅 Timetable <span class="tag">Soon</span></a></li>
-            <li class="divider"></li>
-            <li><a href="#" id="logoutLink">🚪 Logout</a></li>
-        </ul>
-    </aside>
-
-    <!-- ===== MAIN PAGE ===== -->
-    <div class="page">
-
-        <!-- Profile Header Card (blue banner) -->
-        <div class="profile-banner">
-            <div class="avatar-ring">
-                <!-- Initials avatar — replace src with real photo in Phase 3 -->
-                <div class="avatar-initials" id="avatarInitials">MP</div>
-            </div>
-            <h1 id="profileName">MOHIT CHANDRA PUROHIT</h1>
-            <p id="profileRoll">2419260</p>
-            <div class="profile-contacts">
-                <span>✉ <span id="profileEmail">2419260@gehu.ac.in</span></span>
-                <span>📞 Not provided</span>
-            </div>
-        </div>
-
-        <!-- ===== ID CARD SECTION ===== -->
-        <div class="card-block">
-            <div class="card-title">
-                <span class="card-icon">🪪</span>
-                <strong>ID Card</strong>
-            </div>
-            <table class="info-table">
-                <tr><th>Father Name</th><td id="fatherName">—</td></tr>
-                <tr><th>Mother Name</th><td id="motherName">—</td></tr>
-                <tr><th>D.O.B.</th><td id="dob">—</td></tr>
-                <tr><th>Official Email</th><td id="officialEmail">—</td></tr>
-                <tr><th>College</th><td>GEHU – Dehradun Campus</td></tr>
-                <tr><th>Course</th><td>BACHELOR OF TECHNOLOGY</td></tr>
-                <tr><th>Specialization</th><td id="specialization">CSE (Hons.) with Cyber Security</td></tr>
-                <tr><th>Year / Sem</th><td id="yearSem">—</td></tr>
-                <tr><th>Branch</th><td>B.Tech (CSE)</td></tr>
-                <tr><th>Section</th><td id="sectionCell">—</td></tr>
-                <tr><th>Enroll No.</th><td id="enrollNo">—</td></tr>
-                <tr><th>University Roll No.</th><td id="uniRoll">—</td></tr>
-            </table>
-        </div>
-
-        <!-- ===== QUICK ACCESS TILES ===== -->
-        <div class="tiles-title">Quick Access</div>
-        <div class="tiles-grid">
-            <a href="attendance.html" class="tile">
-                <div class="tile-icon">📊</div>
-                <div class="tile-label">Attendance</div>
-            </a>
-            <a href="assignments.html" class="tile">
-                <div class="tile-icon">📝</div>
-                <div class="tile-label">Exams</div>
-            </a>
-            <a href="notices.html" class="tile">
-                <div class="tile-icon">📢</div>
-                <div class="tile-label">Notices</div>
-            </a>
-            <a href="clubs.html" class="tile">
-                <div class="tile-icon">🎭</div>
-                <div class="tile-label">Clubs</div>
-            </a>
-            <a href="assignments.html" class="tile">
-                <div class="tile-icon">📚</div>
-                <div class="tile-label">Assignments</div>
-            </a>
-            <a href="#" class="tile dim">
-                <div class="tile-icon">💰</div>
-                <div class="tile-label">Fees</div>
-            </a>
-            <a href="#" class="tile dim">
-                <div class="tile-icon">🏠</div>
-                <div class="tile-label">Hostel</div>
-            </a>
-            <a href="#" class="tile dim">
-                <div class="tile-icon">📅</div>
-                <div class="tile-label">Timetable</div>
-            </a>
-        </div>
-
-        <footer class="footer">© 2026 GEHU Connect | Team Avengers</footer>
     </div>
 
-    <script src="../JavaScript/dashboard.js"></script>
+    <script>
+        var student = JSON.parse(sessionStorage.getItem("student"));
+
+        if (!student) {
+            window.location.href = "index.html";
+        } else {
+            document.getElementById("welcome").innerText  = "Welcome back, " + student.name + "!";
+            document.getElementById("s-name").innerText   = student.name;
+            document.getElementById("s-id").innerText     = student.id;
+            document.getElementById("s-branch").innerText = student.branch;
+            document.getElementById("s-cgpa").innerText   = student.cgpa;
+            document.getElementById("s-hostel").innerText = student.hostel;
+            document.getElementById("s-room").innerText   = student.room;
+            document.getElementById("s-phone").innerText  = student.phone;
+        }
+
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = "index.html";
+        }
+    </script>
 </body>
 </html>

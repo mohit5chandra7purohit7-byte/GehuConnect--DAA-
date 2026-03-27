@@ -1,111 +1,65 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Attendance — GEHU Connect</title>
-    <link rel="stylesheet" href="../CSS/attendance.css">
+    <title>GehuConnect - Attendance</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f0f0f0; margin: 0; padding: 20px; }
+        .container { max-width: 650px; margin: 0 auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        h2 { color: #2c3e50; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th { background: #2980b9; color: white; padding: 10px; text-align: left; }
+        td { padding: 10px; border: 1px solid #ddd; }
+        tr:nth-child(even) { background: #f9f9f9; }
+        .ok { color: green; font-weight: bold; }
+        .warn { color: red; font-weight: bold; }
+        .back { display: inline-block; margin-top: 15px; padding: 8px 14px; background: #7f8c8d; color: white; text-decoration: none; border-radius: 4px; }
+    </style>
 </head>
-
 <body>
+    <div class="container">
+        <h2>Attendance Report</h2>
+        <p id="status" style="color:#777;">Loading...</p>
 
-    <!-- Header -->
-    <header class="header">
-        <div class="header-inner">
-            <div class="logo">
-                <a href="student_dashboard.html">← Dashboard</a>
-                <span class="sep">|</span>
-                <h1>GEHU Connect</h1>
-            </div>
-            <div class="student-badge">
-                <span id="studentNameBadge">Loading...</span>
-                <span class="roll-badge" id="rollBadge">—</span>
-            </div>
-        </div>
-    </header>
+        <table id="att-table" style="display:none;">
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Attendance %</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="att-body"></tbody>
+        </table>
 
-    <!-- Page Title -->
-    <div class="page-title">
-        <h2>📊 Attendance &amp; Predictor</h2>
-        <p class="subtitle">Subjects sorted by attendance % · critical subjects on top</p>
+        <a href="student_dashboard.html" class="back">← Back to Dashboard</a>
     </div>
 
-    <div class="main-container">
+    <script>
+        var student = JSON.parse(sessionStorage.getItem("student"));
+        if (!student) { window.location.href = "index.html"; }
 
+        document.getElementById("status").innerText = "Loading attendance for " + student.name + "...";
 
-        <!-- ===== SORT DEMO (before / after) ===== -->
-        <div class="demo-section">
-            <h3>⚙️ Live Sort Demo</h3>
-            <p class="demo-note">Click the button to watch Merge Sort animate the table — just like the C++ program does it.</p>
-            <button id="sortBtn" class="sort-btn">▶ Run Merge Sort</button>
-            <button id="resetBtn" class="reset-btn" style="display:none;">↺ Reset</button>
-            <div id="sortStatus" class="sort-status"></div>
-        </div>
+        fetch("http://localhost:5000/attendance?id=" + student.id)
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                document.getElementById("status").style.display = "none";
+                document.getElementById("att-table").style.display = "table";
 
-        <!-- ===== ATTENDANCE TABLE ===== -->
-        <div class="table-wrapper">
-            <table class="attendance-table" id="attendanceTable">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Subject</th>
-                        <th>Code</th>
-                        <th>Attended</th>
-                        <th>Total</th>
-                        <th>Percentage</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody id="attendanceBody">
-                    <!-- Filled by JS -->
-                </tbody>
-            </table>
-        </div>
+                var tbody = document.getElementById("att-body");
+                tbody.innerHTML = "";
 
-        <!-- ===== SUMMARY CARDS ===== -->
-        <div class="summary-grid" id="summaryGrid">
-            <div class="sum-card">
-                <div class="sum-icon">📊</div>
-                <div class="sum-val" id="avgPct">--%</div>
-                <div class="sum-label">Overall Average</div>
-            </div>
-            <div class="sum-card">
-                <div class="sum-icon">⚠️</div>
-                <div class="sum-val danger" id="lowCount">--</div>
-                <div class="sum-label">Below 75%</div>
-            </div>
-            <div class="sum-card">
-                <div class="sum-icon">✅</div>
-                <div class="sum-val safe" id="safeCount">--</div>
-                <div class="sum-label">Safe Subjects</div>
-            </div>
-            <div class="sum-card">
-                <div class="sum-icon">📚</div>
-                <div class="sum-val" id="totalSubs">--</div>
-                <div class="sum-label">Total Subjects</div>
-            </div>
-        </div>
-
-        <!-- ===== RECOVERY PREDICTOR ===== -->
-        <div class="predictor-section">
-            <h3>📈 Recovery Predictor</h3>
-            <p class="pred-note">Formula: <code>x = ceil((0.75 × total − attended) / 0.25)</code> — classes needed to reach 75%</p>
-            <div id="predictorCards" class="predictor-cards">
-                <!-- Filled by JS -->
-            </div>
-        </div>
-
-
-
-    </div><!-- end main-container -->
-
-    <!-- Footer -->
-    <footer class="footer">
-        <p>© 2026 GEHU Connect | Module: Mohit — Attendance &amp; Predictor | DSA: Merge Sort</p>
-    </footer>
-
-    <script src="../JavaScript/attendance.js"></script>
-
+                for (var i = 0; i < data.length; i++) {
+                    var row = data[i];
+                    var statusText = row.warning ? "<span class='warn'>⚠ WARNING</span>" : "<span class='ok'>✔ OK</span>";
+                    var tr = document.createElement("tr");
+                    tr.innerHTML = "<td>" + row.subject + "</td><td>" + row.percentage + "%</td><td>" + statusText + "</td>";
+                    tbody.appendChild(tr);
+                }
+            })
+            .catch(function() {
+                document.getElementById("status").innerText = "Failed to load attendance data.";
+            });
+    </script>
 </body>
 </html>

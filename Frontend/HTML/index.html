@@ -1,67 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GEHU Connect - Student Login</title>
-    <link rel="stylesheet" href="../CSS/Style.css">
+    <title>GehuConnect - Login</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f0f0f0; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .box { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 300px; text-align: center; }
+        h2 { color: #2c3e50; margin-bottom: 20px; }
+        input { width: 90%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
+        button { width: 100%; padding: 10px; background: #2980b9; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; margin-top: 10px; }
+        button:hover { background: #1a6298; }
+        #error-msg { color: red; margin-top: 10px; font-size: 13px; }
+    </style>
 </head>
-
 <body>
-    <div class="login-container">
-        <!-- Logo Section -->
-        <div class="header">
-            <h1>GEHU Connect</h1>
-            <p class="tagline">Student Portal Redesign</p>
-        </div>
-
-        <!-- Random Quote Generator -->
-        <div class="quote-box">
-            <p id="quote">Loading inspirational quote...</p>
-            <button type="button" id="newQuoteBtn" class="quote-btn">New Quote</button>
-        </div>
-
-        <!-- Login Form -->
-        <form id="loginForm" class="login-form">
-            <h2>Student Login</h2>
-
-            <!-- Student Roll No -->
-            <div class="form-group">
-                <label for="studentId">Student Roll No</label>
-                <input type="text" id="studentId" placeholder="Enter your Student Roll No" required>
-            </div>
-
-            <!-- Password -->
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" placeholder="Enter your password" required>
-            </div>
-
-            <!-- Captcha -->
-            <div class="form-group captcha-group">
-                <label>Verify you're human</label>
-                <div class="captcha-box">
-                    <span id="captchaText" class="captcha-text"></span>
-                    <button type="button" id="refreshCaptcha" class="refresh-btn">🔄</button>
-                </div>
-                <input type="text" id="captchaInput" placeholder="Enter captcha above" required>
-            </div>
-
-            <!-- Submit Button -->
-            <button type="submit" class="login-btn">Login</button>
-
-            <!-- Error Message -->
-            <p id="errorMsg" class="error-msg"></p>
-        </form>
-
-        <!-- Footer -->
-        <div class="footer">
-            <p>Forgot Password? <a href="#">Reset here</a></p>
-        </div>
+    <div class="box">
+        <h2>GEHU Connect</h2>
+        <p style="color:#777; font-size:13px;">Enter your student ID to login</p>
+        <input type="text" id="studentId" placeholder="Student ID (e.g. 2419260)" />
+        <button onclick="doLogin()">Login</button>
+        <p id="error-msg"></p>
     </div>
 
-    <script src="../JavaScript/Script.js"></script>
-</body>
+    <script>
+        function doLogin() {
+            var id = document.getElementById("studentId").value.trim();
+            if (id === "") {
+                document.getElementById("error-msg").innerText = "Please enter your student ID.";
+                return;
+            }
 
+            fetch("http://localhost:5000/login?id=" + id)
+                .then(function(res) {
+                    if (!res.ok) throw new Error("not found");
+                    return res.json();
+                })
+                .then(function(data) {
+                    if (data.error) {
+                        document.getElementById("error-msg").innerText = "Student not found.";
+                    } else {
+                        sessionStorage.setItem("student", JSON.stringify(data));
+                        window.location.href = "student_dashboard.html";
+                    }
+                })
+                .catch(function() {
+                    document.getElementById("error-msg").innerText = "Student not found.";
+                });
+        }
+
+        // allow pressing Enter too
+        document.addEventListener("keyup", function(e) {
+            if (e.key === "Enter") doLogin();
+        });
+    </script>
+</body>
 </html>
