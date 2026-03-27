@@ -15,7 +15,7 @@
 #include <unordered_map>
 #include <vector>
 #include <iomanip>
-#include <fstream>
+
 using namespace std;
 
 // ============================================================
@@ -70,25 +70,7 @@ public:
         cout << "  +------------------------------------------+\n";
     }
 
-    // Save profile to a text file (File I/O demo)
-    void saveToFile(const string& filename) const {
-        ofstream file(filename);
-        if (!file.is_open()) {
-            cerr << "  [Error] Could not open file: " << filename << "\n";
-            return;
-        }
-        file << "ROLL="    << rollNo     << "\n";
-        file << "NAME="    << fullName   << "\n";
-        file << "EMAIL="   << email      << "\n";
-        file << "SEM="     << semester   << "\n";
-        file << "SECTION=" << section    << "\n";
-        file << "ENROLL="  << enrollNo   << "\n";
-        file << "FATHER="  << fatherName << "\n";
-        file << "MOTHER="  << motherName << "\n";
-        file << "DOB="     << dob        << "\n";
-        file.close();
-        cout << "  [File I/O] Profile saved → " << filename << "\n";
-    }
+
 };
 
 // ============================================================
@@ -183,8 +165,6 @@ int main() {
         if (db.login(t.roll, t.pwd, s)) {
             cout << "  ✅  LOGIN SUCCESS\n";
             s.display();
-            // Demonstrate File I/O
-            s.saveToFile("Data/session_" + s.rollNo + ".txt");
         } else {
             cout << "  ❌  LOGIN FAILED — Invalid roll number or password\n";
         }
