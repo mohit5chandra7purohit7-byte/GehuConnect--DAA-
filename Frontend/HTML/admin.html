@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Admin Dashboard - GehuConnect</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7fa; color: #333; margin: 0; padding: 20px; }
+        .container { max-width: 600px; margin: 20px auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #1a73e8; margin-top: 0; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; flex-wrap: wrap; }
+        .tab-btn { padding: 10px 15px; border: 1px solid #1a73e8; background: white; color: #1a73e8; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .tab-btn.active { background: #1a73e8; color: white; }
+        .form-section { display: none; }
+        .form-section.active { display: block; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; }
+        input[type="text"], input[type="number"], input[type="date"], select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button[type="submit"] { width: 100%; padding: 12px; background: #1a73e8; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; font-weight: bold; transition: background 0.3s; }
+        button[type="submit"]:hover { background: #1557b0; }
+        .message { margin-top: 15px; text-align: center; font-weight: bold; min-height: 20px; }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>GehuConnect Database Admin</h2>
+    
+    <div class="tabs">
+        <button class="tab-btn active" onclick="showTab('student')">Add Student</button>
+        <button class="tab-btn" onclick="showTab('attendance')">Add Attendance</button>
+        <button class="tab-btn" onclick="showTab('assignment')">Add Assignment</button>
+        <button class="tab-btn" onclick="showTab('notice')">Add Notice</button>
+    </div>
+
+    <!-- ADD STUDENT FORM -->
+    <div id="student" class="form-section active">
+        <form id="addStudentForm" onsubmit="submitForm(event, '/add_student', 'studentMsg')">
+            <div class="form-group"><label>Student ID</label><input type="text" name="id" required /></div>
+            <div class="form-group"><label>Name</label><input type="text" name="name" required /></div>
+            <div class="form-group"><label>Branch</label><input type="text" name="branch" required /></div>
+            <div class="form-group"><label>CGPA</label><input type="number" name="cgpa" step="0.1" required /></div>
+            <div class="form-group"><label>Hostel</label><input type="text" name="hostel" required /></div>
+            <div class="form-group"><label>Room</label><input type="text" name="room" required /></div>
+            <div class="form-group"><label>Phone</label><input type="text" name="phone" required /></div>
+            <button type="submit">Add Student</button>
+        </form>
+        <div id="studentMsg" class="message"></div>
+    </div>
+
+    <!-- ADD ATTENDANCE FORM -->
+    <div id="attendance" class="form-section">
+        <form id="addAttendanceForm" onsubmit="submitForm(event, '/add_attendance', 'attendanceMsg')">
+            <div class="form-group"><label>Student ID</label><input type="text" name="student_id" required /></div>
+            <div class="form-group"><label>Subject</label><input type="text" name="subject" required /></div>
+            <div class="form-group"><label>Percentage (%)</label><input type="number" name="percentage" step="0.1" required /></div>
+            <button type="submit">Add Attendance</button>
+        </form>
+        <div id="attendanceMsg" class="message"></div>
+    </div>
+
+    <!-- ADD ASSIGNMENT FORM -->
+    <div id="assignment" class="form-section">
+        <form id="addAssignmentForm" onsubmit="submitForm(event, '/add_assignment', 'assignmentMsg')">
+            <div class="form-group"><label>Student ID</label><input type="text" name="student_id" required /></div>
+            <div class="form-group"><label>Subject</label><input type="text" name="subject" required /></div>
+            <div class="form-group"><label>Assignment Title</label><input type="text" name="title" required /></div>
+            <div class="form-group"><label>Due Date</label><input type="date" name="due_date" required /></div>
+            <button type="submit">Add Assignment</button>
+        </form>
+        <div id="assignmentMsg" class="message"></div>
+    </div>
+
+    <!-- ADD NOTICE FORM -->
+    <div id="notice" class="form-section">
+        <form id="addNoticeForm" onsubmit="submitForm(event, '/add_notice', 'noticeMsg')">
+            <div class="form-group"><label>Notice Title</label><input type="text" name="title" required /></div>
+            <div class="form-group"><label>Category</label>
+                <select name="category" required>
+                    <option value="Academic">Academic</option>
+                    <option value="Fee">Fee</option>
+                    <option value="Event">Event</option>
+                    <option value="Exam">Exam</option>
+                </select>
+            </div>
+            <div class="form-group"><label>Date (YYYY-MM-DD)</label><input type="date" name="date" required /></div>
+            <div class="form-group"><label>Urgency</label>
+                <select name="urgency" required>
+                    <option value="normal">Normal</option>
+                    <option value="urgent">Urgent</option>
+                </select>
+            </div>
+            <button type="submit">Add Notice</button>
+        </form>
+        <div id="noticeMsg" class="message"></div>
+    </div>
+</div>
+
+<script>
+    function showTab(tabId) {
+        document.querySelectorAll('.form-section').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        event.target.classList.add('active');
+    }
+
+    async function submitForm(e, endpoint, msgId) {
+        e.preventDefault();
+        const msgDiv = document.getElementById(msgId);
+        msgDiv.textContent = 'Saving...';
+        msgDiv.className = 'message';
+
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData.entries());
+
+        // Convert number types appropriately
+        if(data.cgpa) data.cgpa = parseFloat(data.cgpa);
+        if(data.percentage) data.percentage = parseFloat(data.percentage);
+
+        try {
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const result = await response.json();
+            
+            if (response.ok) {
+                msgDiv.textContent = result.message;
+                msgDiv.classList.add('success');
+                e.target.reset(); // clear form
+            } else {
+                msgDiv.textContent = 'Error: ' + result.error;
+                msgDiv.classList.add('error');
+            }
+        } catch (err) {
+            msgDiv.textContent = 'Failed to connect to server.';
+            msgDiv.classList.add('error');
+        }
+    }
+</script>
+
+</body>
+</html>

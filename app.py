@@ -197,6 +197,64 @@ def assignments():
     return jsonify(result)
 
 
+@app.route("/add_student", methods=["POST"])
+def add_student():
+    data = request.json
+    try:
+        con = sqlite3.connect(DB_PATH)
+        cur = con.cursor()
+        cur.execute("INSERT INTO students (id, name, branch, cgpa, hostel, room, phone) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                    (data['id'], data['name'], data['branch'], data['cgpa'], data['hostel'], data['room'], data['phone']))
+        con.commit()
+        con.close()
+        return jsonify({"success": True, "message": "Student added successfully!"})
+    except sqlite3.IntegrityError:
+        return jsonify({"error": "Student ID already exists"}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/add_attendance", methods=["POST"])
+def add_attendance():
+    data = request.json
+    try:
+        con = sqlite3.connect(DB_PATH)
+        cur = con.cursor()
+        cur.execute("INSERT INTO attendance (student_id, subject, percentage) VALUES (?, ?, ?)",
+                    (data['student_id'], data['subject'], data['percentage']))
+        con.commit()
+        con.close()
+        return jsonify({"success": True, "message": "Attendance recorded successfully!"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/add_notice", methods=["POST"])
+def add_notice():
+    data = request.json
+    try:
+        con = sqlite3.connect(DB_PATH)
+        cur = con.cursor()
+        cur.execute("INSERT INTO notices (title, category, date, urgency) VALUES (?, ?, ?, ?)",
+                    (data['title'], data['category'], data['date'], data['urgency']))
+        con.commit()
+        con.close()
+        return jsonify({"success": True, "message": "Notice published successfully!"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/add_assignment", methods=["POST"])
+def add_assignment():
+    data = request.json
+    try:
+        con = sqlite3.connect(DB_PATH)
+        cur = con.cursor()
+        cur.execute("INSERT INTO assignments (student_id, subject, title, due_date) VALUES (?, ?, ?, ?)",
+                    (data['student_id'], data['subject'], data['title'], data['due_date']))
+        con.commit()
+        con.close()
+        return jsonify({"success": True, "message": "Assignment created successfully!"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 @app.route("/")
 def home():
     return redirect("/index.html")
