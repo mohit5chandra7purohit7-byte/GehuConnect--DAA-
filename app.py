@@ -11,6 +11,12 @@ app = Flask(__name__, static_folder=FRONTEND_DIR, static_url_path="")
 app.secret_key = "gehuconnect_super_secret_key"
 CORS(app)
 
+@app.before_request
+def security_check():
+    if request.path == "/admin.html" and not session.get("admin_logged_in"):
+        return redirect("/admin_login.html")
+
+
 DB_PATH = os.path.join(os.path.dirname(__file__), "gehuconnect.db")
 BACKEND_DIR = os.path.join(os.path.dirname(__file__), "Backend")
 
