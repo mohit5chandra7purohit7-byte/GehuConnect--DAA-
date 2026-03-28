@@ -11,12 +11,9 @@ CORS(app)
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "gehuconnect.db")
 BACKEND_DIR = os.path.join(os.path.dirname(__file__), "Backend")
-INPUT_FILE  = os.path.join(BACKEND_DIR, "input.txt")
+INPUT_FILE = os.path.join(BACKEND_DIR, "input.txt")
 
 
-# ----------------------------------------------------------------
-#  DB INIT — runs once on startup, creates tables + seeds data
-# ----------------------------------------------------------------
 def init_db():
     con = sqlite3.connect(DB_PATH)
     cur = con.cursor()
@@ -56,7 +53,6 @@ def init_db():
         );
     """)
 
-    # Seed only if empty
     if cur.execute("SELECT COUNT(*) FROM students").fetchone()[0] == 0:
         cur.executemany("INSERT INTO students VALUES (?,?,?,?,?,?,?)", [
             ("2419260", "Mohit Purohit",  "CSE", 8.2, "Block C", "214", "9876543210"),
@@ -100,15 +96,10 @@ def init_db():
 
     con.commit()
     con.close()
-    print("[DB] gehuconnect.db ready.")
 
 
-# ----------------------------------------------------------------
-#  HELPER — compile & run a cpp file, return parsed JSON output
-# ----------------------------------------------------------------
 def run_cpp(cpp_file, input_data):
     exe = cpp_file.replace(".cpp", ".exe")
-    # Compile if exe doesn't exist or cpp is newer
     if not os.path.exists(exe) or os.path.getmtime(cpp_file) > os.path.getmtime(exe):
         result = subprocess.run(
             ["g++", cpp_file, "-o", exe],
@@ -117,11 +108,9 @@ def run_cpp(cpp_file, input_data):
         if result.returncode != 0:
             return {"error": "compile failed", "detail": result.stderr}
 
-    # Write input for cpp to read
     with open(INPUT_FILE, "w") as f:
         f.write(input_data)
 
-    # Run executable
     result = subprocess.run([exe], capture_output=True, text=True, cwd=BACKEND_DIR)
     if result.returncode != 0:
         return {"error": "runtime error", "detail": result.stderr}
@@ -131,10 +120,6 @@ def run_cpp(cpp_file, input_data):
     except Exception:
         return {"error": "bad JSON output", "raw": result.stdout}
 
-
-# ----------------------------------------------------------------
-#  ROUTES
-# ----------------------------------------------------------------
 
 @app.route("/login")
 def login():
@@ -149,7 +134,6 @@ def login():
     if not row:
         return jsonify({"error": "Student not found"}), 404
 
-    # Write input file for cpp
     input_data = f"{row[0]},{row[1]},{row[2]},{row[3]},{row[4]},{row[5]},{row[6]}\n"
     cpp_path = os.path.join(BACKEND_DIR, "login.cpp")
     result = run_cpp(cpp_path, input_data)
@@ -169,7 +153,6 @@ def attendance():
     if not rows:
         return jsonify({"error": "No attendance data"}), 404
 
-    # Format: subject,percentage per line
     input_data = "\n".join(f"{r[0]},{r[1]}" for r in rows) + "\n"
     cpp_path = os.path.join(BACKEND_DIR, "attendance.cpp")
     result = run_cpp(cpp_path, input_data)
@@ -209,9 +192,6 @@ def assignments():
     return jsonify(result)
 
 
-# ----------------------------------------------------------------
-#  STATIC FRONTEND ROUTES
-# ----------------------------------------------------------------
 @app.route("/")
 def home():
     return redirect("/index.html")
@@ -221,10 +201,6 @@ def serve_static(filename):
     return send_from_directory(FRONTEND_DIR, filename)
 
 
-# ----------------------------------------------------------------
-#  MAIN
-# ----------------------------------------------------------------
 if __name__ == "__main__":
     init_db()
-    print("[Server] Running at http://localhost:5000")
     app.run(debug=True, port=5000)

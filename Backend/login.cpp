@@ -1,19 +1,8 @@
-// ============================================================
-//  login.cpp  — Maitri's Module (Phase 2)
-//  DSA Concept : HashMap (unordered_map)
-//               student ID -> Student struct, O(1) lookup
-//
-//  INPUT  : reads from input.txt (written by Flask)
-//           format: id,name,branch,cgpa,hostel,room,phone
-//  OUTPUT : prints JSON to stdout (captured by Flask)
-// ============================================================
-
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <string>
 #include <unordered_map>
-
 using namespace std;
 
 struct Student {
@@ -21,9 +10,7 @@ struct Student {
     float cgpa;
 };
 
-// TODO: add session token logic in phase 3
 void validateSession() {
-    // left empty for now — will add JWT tokens later
 }
 
 int main() {
@@ -33,12 +20,10 @@ int main() {
         return 1;
     }
 
-    // read the one line Flask wrote
     string line;
     getline(fin, line);
     fin.close();
 
-    // parse CSV line into Student struct
     stringstream ss(line);
     string token;
     Student s;
@@ -54,11 +39,9 @@ int main() {
         col++;
     }
 
-    // put into HashMap (unordered_map) — O(1) insert and lookup
     unordered_map<string, Student> studentMap;
-    studentMap[s.id] = s;   // HashMap insert
+    studentMap[s.id] = s;
 
-    // O(1) lookup — the DSA concept
     auto it = studentMap.find(s.id);
     if (it == studentMap.end()) {
         cout << "{\"error\":\"Student not found\"}" << endl;
@@ -66,7 +49,6 @@ int main() {
     }
 
     Student &found = it->second;
-    // print result as JSON
     cout << "{"
          << "\"id\":\""     << found.id     << "\","
          << "\"name\":\""   << found.name   << "\","
