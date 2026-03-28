@@ -328,14 +328,27 @@ def update_student():
     try:
         con = sqlite3.connect(DB_PATH)
         cur = con.cursor()
+        
+        # Allow changing their ID and track the old one
+        old_id = data.get('old_id', data['id'])
+        new_id = data['id']
+        
         cur.execute("""
             UPDATE students 
-            SET name=?, branch=?, cgpa=?, hostel=?, room=?, phone=? 
+            SET id=?, name=?, branch=?, cgpa=?, hostel=?, room=?, phone=? 
             WHERE id=?
-        """, (data['name'], data['branch'], data['cgpa'], data['hostel'], data['room'], data['phone'], data['id']))
+        """, (new_id, data['name'], data['branch'], data['cgpa'], data['hostel'], data['room'], data['phone'], old_id))
+        
+        # Manually cascade the ID change since PRAGMA foreign_keys is not inherently enforcing ON UPDATE CASCADE
+        if old_id != new_id:
+            cur.execute("UPDATE attendance SET student_id=? WHERE student_id=?", (new_id, old_id))
+            cur.execute("UPDATE assignments SET student_id=? WHERE student_id=?", (new_id, old_id))
+            
         con.commit()
         con.close()
         return jsonify({"success": True, "message": "Student profile updated successfully!"})
+    except sqlite3.IntegrityError:
+        return jsonify({"error": "Student ID already exists"}), 400
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
