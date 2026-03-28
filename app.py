@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, send_from_directory, redirect
+from flask import Flask, jsonify, request, send_from_directory, redirect, session
 from flask_cors import CORS
 import sqlite3
 import subprocess
@@ -8,6 +8,7 @@ import tempfile
 
 FRONTEND_DIR = os.path.join(os.path.dirname(__file__), "Frontend", "HTML")
 app = Flask(__name__, static_folder=FRONTEND_DIR, static_url_path="")
+app.secret_key = "gehuconnect_super_secret_key"
 CORS(app)
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "gehuconnect.db")
@@ -51,6 +52,12 @@ def init_db():
             title      TEXT,
             due_date   TEXT
         );
+
+        CREATE TABLE IF NOT EXISTS admins (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT UNIQUE,
+            password TEXT
+        );
     """)
 
     if cur.execute("SELECT COUNT(*) FROM students").fetchone()[0] == 0:
@@ -93,6 +100,9 @@ def init_db():
             ("2418628", "Maths",   "Calculus sheet",         "2026-03-23"),
             ("2419475", "DSA",     "Sorting algorithms",     "2026-03-24"),
         ])
+        
+    if cur.execute("SELECT COUNT(*) FROM admins").fetchone()[0] == 0:
+        cur.execute("INSERT INTO admins (username, password) VALUES (?, ?)", ("admin", "admin123"))
 
     con.commit()
     con.close()
@@ -197,8 +207,29 @@ def assignments():
     return jsonify(result)
 
 
+@app.route("/api/admin_login", methods=["POST"])
+def admin_login():
+    data = request.json
+    username = data.get("username")
+    password = data.get("password")
+    
+    con = sqlite3.connect(DB_PATH)
+    admin = con.execute("SELECT * FROM admins WHERE username=? AND password=?", (username, password)).fetchone()
+    con.close()
+    
+    if admin:
+        session["admin_logged_in"] = True
+        return jsonify({"success": True})
+    return jsonify({"error": "Invalid username or password"}), 401
+
+@app.route("/api/admin_logout", methods=["POST"])
+def admin_logout():
+    session.pop("admin_logged_in", None)
+    return jsonify({"success": True})
+
 @app.route("/add_student", methods=["POST"])
 def add_student():
+    if not session.get("admin_logged_in"): return jsonify({"error": "Unauthorized"}), 401
     data = request.json
     try:
         con = sqlite3.connect(DB_PATH)
@@ -215,6 +246,7 @@ def add_student():
 
 @app.route("/add_attendance", methods=["POST"])
 def add_attendance():
+    if not session.get("admin_logged_in"): return jsonify({"error": "Unauthorized"}), 401
     data = request.json
     try:
         con = sqlite3.connect(DB_PATH)
@@ -229,6 +261,7 @@ def add_attendance():
 
 @app.route("/add_notice", methods=["POST"])
 def add_notice():
+    if not session.get("admin_logged_in"): return jsonify({"error": "Unauthorized"}), 401
     data = request.json
     try:
         con = sqlite3.connect(DB_PATH)
@@ -243,6 +276,7 @@ def add_notice():
 
 @app.route("/add_assignment", methods=["POST"])
 def add_assignment():
+    if not session.get("admin_logged_in"): return jsonify({"error": "Unauthorized"}), 401
     data = request.json
     try:
         con = sqlite3.connect(DB_PATH)
@@ -255,12 +289,19 @@ def add_assignment():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+
 @app.route("/")
 def home():
     return redirect("/index.html")
 
+@app.route("/admin")
+def admin_redirect():
+    return redirect("/admin.html")
+
 @app.route("/<path:filename>")
 def serve_static(filename):
+    if filename == "admin.html" and not session.get("admin_logged_in"):
+        return redirect("/admin_login.html")
     return send_from_directory(FRONTEND_DIR, filename)
 
 
