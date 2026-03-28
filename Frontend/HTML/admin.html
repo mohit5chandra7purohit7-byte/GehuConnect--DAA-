@@ -24,6 +24,12 @@
         .message { margin-top: 15px; text-align: center; font-weight: bold; min-height: 20px; }
         .success { color: green; }
         .error { color: red; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background: #f4f7fa; }
+        .del-btn { background: #dc3545; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+        .del-btn:hover { background: #c82333; }
+        .data-tables-section { margin-top: 30px; display: none; }
     </style>
 </head>
 <body>
@@ -39,6 +45,42 @@
         <button class="tab-btn" onclick="showTab('attendance')">Add Attendance</button>
         <button class="tab-btn" onclick="showTab('assignment')">Add Assignment</button>
         <button class="tab-btn" onclick="showTab('notice')">Add Notice</button>
+        <button class="tab-btn" onclick="showTab('manage')">Manage Student</button>
+    </div>
+
+    <!-- MANAGE STUDENT FORM -->
+    <div id="manage" class="form-section">
+        <div class="form-group" style="display: flex; gap: 10px;">
+            <input type="text" id="searchId" placeholder="Enter Student ID" required />
+            <button onclick="fetchStudentData()" style="width: auto;">Fetch Student</button>
+        </div>
+        <div id="fetchMsg" class="message"></div>
+        
+        <div id="manageContent" class="data-tables-section">
+            <form id="updateStudentForm" onsubmit="submitForm(event, '/api/update_student', 'updateMsg')">
+                <input type="hidden" name="id" id="editId" />
+                <div class="form-group"><label>Name</label><input type="text" name="name" id="editName" required /></div>
+                <div class="form-group"><label>Branch</label><input type="text" name="branch" id="editBranch" required /></div>
+                <div class="form-group"><label>CGPA</label><input type="number" name="cgpa" id="editCgpa" step="0.1" required /></div>
+                <div class="form-group"><label>Hostel</label><input type="text" name="hostel" id="editHostel" required /></div>
+                <div class="form-group"><label>Room</label><input type="text" name="room" id="editRoom" required /></div>
+                <div class="form-group"><label>Phone</label><input type="text" name="phone" id="editPhone" required /></div>
+                <button type="submit">Save Profile Changes</button>
+                <div id="updateMsg" class="message"></div>
+            </form>
+
+            <h3 style="color: #1a73e8; margin-top: 30px;">Attendance Records</h3>
+            <table>
+                <thead><tr><th>Subject</th><th>Percentage</th><th>Action</th></tr></thead>
+                <tbody id="attendanceTbody"></tbody>
+            </table>
+
+            <h3 style="color: #1a73e8; margin-top: 30px;">Assignments</h3>
+            <table>
+                <thead><tr><th>Subject</th><th>Title</th><th>Due Date</th><th>Action</th></tr></thead>
+                <tbody id="assignmentsTbody"></tbody>
+            </table>
+        </div>
     </div>
 
     <!-- ADD STUDENT FORM -->
@@ -152,6 +194,66 @@
             msgDiv.textContent = 'Failed to connect to server.';
             msgDiv.classList.add('error');
         }
+    }
+
+    async function fetchStudentData() {
+        const id = document.getElementById('searchId').value;
+        const msg = document.getElementById('fetchMsg');
+        const content = document.getElementById('manageContent');
+        if(!id) return;
+        
+        msg.textContent = 'Fetching...'; msg.className = 'message';
+        content.style.display = 'none';
+
+        try {
+            const res = await fetch(`/api/get_student_full?id=${id}`);
+            const data = await res.json();
+            
+            if(res.ok) {
+                msg.textContent = '';
+                content.style.display = 'block';
+                
+                // Populate Profile
+                document.getElementById('editId').value = data.student.id;
+                document.getElementById('editName').value = data.student.name;
+                document.getElementById('editBranch').value = data.student.branch;
+                document.getElementById('editCgpa').value = data.student.cgpa;
+                document.getElementById('editHostel').value = data.student.hostel;
+                document.getElementById('editRoom').value = data.student.room;
+                document.getElementById('editPhone').value = data.student.phone;
+                
+                // Populate Attendance
+                const attBody = document.getElementById('attendanceTbody');
+                attBody.innerHTML = '';
+                data.attendance.forEach(a => {
+                    attBody.innerHTML += `<tr><td>${a.subject}</td><td>${a.percentage}%</td><td><button class="del-btn" onclick="deleteRecord('attendance', ${a.id})">❌</button></td></tr>`;
+                });
+                
+                // Populate Assignments
+                const assBody = document.getElementById('assignmentsTbody');
+                assBody.innerHTML = '';
+                data.assignments.forEach(a => {
+                    assBody.innerHTML += `<tr><td>${a.subject}</td><td>${a.title}</td><td>${a.due_date}</td><td><button class="del-btn" onclick="deleteRecord('assignments', ${a.id})">❌</button></td></tr>`;
+                });
+            } else {
+                msg.textContent = data.error; msg.classList.add('error');
+            }
+        } catch(e) {
+            msg.textContent = 'Server error'; msg.classList.add('error');
+        }
+    }
+
+    async function deleteRecord(table, id) {
+        if(!confirm('Delete this record?')) return;
+        try {
+            const res = await fetch('/api/delete_record', {
+                method: 'POST',
+                headers:{ 'Content-Type': 'application/json' },
+                body: JSON.stringify({table, id})
+            });
+            if(res.ok) { fetchStudentData(); }
+            else { alert('Failed to delete'); }
+        } catch(e) { alert('Server error'); }
     }
 </script>
 

@@ -295,6 +295,68 @@ def add_assignment():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@app.route("/api/get_student_full", methods=["GET"])
+def get_student_full():
+    if not session.get("admin_logged_in"): return jsonify({"error": "Unauthorized"}), 401
+    
+    student_id = request.args.get("id")
+    if not student_id: return jsonify({"error": "Missing student ID"}), 400
+        
+    con = sqlite3.connect(DB_PATH)
+    con.row_factory = sqlite3.Row
+    cur = con.cursor()
+    
+    student = cur.execute("SELECT * FROM students WHERE id=?", (student_id,)).fetchone()
+    if not student:
+        con.close()
+        return jsonify({"error": "Student not found"}), 404
+        
+    attendance = cur.execute("SELECT id, subject, percentage FROM attendance WHERE student_id=?", (student_id,)).fetchall()
+    assignments = cur.execute("SELECT id, subject, title, due_date FROM assignments WHERE student_id=?", (student_id,)).fetchall()
+    con.close()
+    
+    return jsonify({
+        "student": dict(student),
+        "attendance": [dict(a) for a in attendance],
+        "assignments": [dict(a) for a in assignments]
+    })
+
+@app.route("/api/update_student", methods=["POST"])
+def update_student():
+    if not session.get("admin_logged_in"): return jsonify({"error": "Unauthorized"}), 401
+    data = request.json
+    try:
+        con = sqlite3.connect(DB_PATH)
+        cur = con.cursor()
+        cur.execute("""
+            UPDATE students 
+            SET name=?, branch=?, cgpa=?, hostel=?, room=?, phone=? 
+            WHERE id=?
+        """, (data['name'], data['branch'], data['cgpa'], data['hostel'], data['room'], data['phone'], data['id']))
+        con.commit()
+        con.close()
+        return jsonify({"success": True, "message": "Student profile updated successfully!"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/api/delete_record", methods=["POST"])
+def delete_record():
+    if not session.get("admin_logged_in"): return jsonify({"error": "Unauthorized"}), 401
+    data = request.json
+    table = data.get('table')
+    record_id = data.get('id')
+    
+    if table not in ['attendance', 'assignments']: return jsonify({"error": "Invalid table"}), 400
+        
+    try:
+        con = sqlite3.connect(DB_PATH)
+        cur = con.cursor()
+        cur.execute(f"DELETE FROM {table} WHERE id=?", (record_id,))
+        con.commit()
+        con.close()
+        return jsonify({"success": True, "message": "Record deleted!"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @app.route("/")
 def home():
