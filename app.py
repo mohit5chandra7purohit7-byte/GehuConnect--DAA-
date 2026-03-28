@@ -4,6 +4,7 @@ import sqlite3
 import subprocess
 import os
 import json
+import tempfile
 
 FRONTEND_DIR = os.path.join(os.path.dirname(__file__), "Frontend", "HTML")
 app = Flask(__name__, static_folder=FRONTEND_DIR, static_url_path="")
@@ -11,7 +12,6 @@ CORS(app)
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "gehuconnect.db")
 BACKEND_DIR = os.path.join(os.path.dirname(__file__), "Backend")
-INPUT_FILE = os.path.join(BACKEND_DIR, "input.txt")
 
 
 def init_db():
@@ -108,10 +108,17 @@ def run_cpp(cpp_file, input_data):
         if result.returncode != 0:
             return {"error": "compile failed", "detail": result.stderr}
 
-    with open(INPUT_FILE, "w") as f:
+    fd, temp_path = tempfile.mkstemp(suffix=".txt", dir=BACKEND_DIR, text=True)
+    with os.fdopen(fd, 'w') as f:
         f.write(input_data)
 
-    result = subprocess.run([exe], capture_output=True, text=True, cwd=BACKEND_DIR)
+    result = subprocess.run([exe, temp_path], capture_output=True, text=True, cwd=BACKEND_DIR)
+    
+    try:
+        os.remove(temp_path)
+    except Exception:
+        pass
+
     if result.returncode != 0:
         return {"error": "runtime error", "detail": result.stderr}
 
@@ -125,16 +132,14 @@ def run_cpp(cpp_file, input_data):
 def login():
     student_id = request.args.get("id", "")
     con = sqlite3.connect(DB_PATH)
-    row = con.execute(
-        "SELECT id,name,branch,cgpa,hostel,room,phone FROM students WHERE id=?",
-        (student_id,)
-    ).fetchone()
+    rows = con.execute("SELECT id,name,branch,cgpa,hostel,room,phone FROM students").fetchall()
     con.close()
 
-    if not row:
+    if not any(r[0] == student_id for r in rows):
         return jsonify({"error": "Student not found"}), 404
 
-    input_data = f"{row[0]},{row[1]},{row[2]},{row[3]},{row[4]},{row[5]},{row[6]}\n"
+    input_data = student_id + "\n"
+    input_data += "\n".join(f"{r[0]},{r[1]},{r[2]},{r[3]},{r[4]},{r[5]},{r[6]}" for r in rows) + "\n"
     cpp_path = os.path.join(BACKEND_DIR, "login.cpp")
     result = run_cpp(cpp_path, input_data)
     return jsonify(result)

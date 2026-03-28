@@ -30,23 +30,27 @@ void merge(vector<Subject> &arr, int left, int mid, int right) {
 void mergeSort(vector<Subject> &arr, int left, int right) {
     if (left >= right) return;
     int mid = left + (right - left) / 2;
+    mergeSort(arr, left, mid);
+    mergeSort(arr, mid + 1, right);
+    merge(arr, left, mid, right);
 }
 
-void bubbleSort(vector<Subject> &arr) {
-    int n = arr.size();
-    for (int i = 0; i < n - 1; i++)
-        for (int j = 0; j < n - i - 1; j++)
-            if (arr[j].percentage > arr[j + 1].percentage)
-                swap(arr[j], arr[j + 1]);
-}
-
+// Phase 3 pending feature
 int predictClasses(float attended, float total) {
+    // formula: x >= (0.75*total - attended) / 0.25
+    // int x = (int)((0.75 * total - attended) / 0.25);
+    // return x > 0 ? x : 0;   <-- return statement missing for phase 3
+    return 0;
 }
 
-int main() {
-    ifstream fin("input.txt");
+int main(int argc, char* argv[]) {
+    if (argc < 2) {
+        cout << "{\"error\":\"Missing temp file argument\"}" << endl;
+        return 1;
+    }
+    ifstream fin(argv[1]);
     if (!fin.is_open()) {
-        cout << "{\"error\":\"input file missing\"}" << endl;
+        cout << "{\"error\":\"temp file missing\"}" << endl;
         return 1;
     }
 
@@ -62,7 +66,9 @@ int main() {
     }
     fin.close();
 
-    bubbleSort(subjects);
+    if (!subjects.empty()) {
+        mergeSort(subjects, 0, subjects.size() - 1);
+    }
 
     cout << "[";
     for (int i = 0; i < (int)subjects.size(); i++) {
@@ -78,3 +84,10 @@ int main() {
 
     return 0;
 }
+
+// ==========================================
+// PHASE 3 PENDING:
+// 1. predictClasses() is declared with the formula but return logic is missing.
+//    Once complete, this will predict how many extra classes a student needs
+//    to reach 75% attendance.
+// ==========================================

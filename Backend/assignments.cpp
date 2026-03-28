@@ -3,7 +3,6 @@
 #include <sstream>
 #include <string>
 #include <vector>
-#include <algorithm>
 using namespace std;
 
 struct Assignment {
@@ -28,6 +27,11 @@ class MinHeap {
 public:
     void insert(Assignment a) {
         heap.push_back(a);
+        int i = heap.size() - 1;
+        while (i > 0 && heap[(i - 1) / 2].dueDate > heap[i].dueDate) {
+            swap(heap[i], heap[(i - 1) / 2]);
+            i = (i - 1) / 2;
+        }
     }
 
     Assignment extractMin() {
@@ -39,16 +43,25 @@ public:
     }
 
     bool empty() { return heap.empty(); }
+
+    // Phase 3 pending
+    void editDueDate(int index, string newDate) {
+        // missing decreaseKey/increaseKey logic and re-heapify
+    }
 };
 
-int main() {
-    ifstream fin("input.txt");
+int main(int argc, char* argv[]) {
+    if (argc < 2) {
+        cout << "{\"error\":\"Missing temp file argument\"}" << endl;
+        return 1;
+    }
+    ifstream fin(argv[1]);
     if (!fin.is_open()) {
         cout << "{\"error\":\"input file missing\"}" << endl;
         return 1;
     }
 
-    vector<Assignment> assignments;
+    MinHeap pq;
     string line;
     while (getline(fin, line)) {
         if (line.empty()) continue;
@@ -57,24 +70,30 @@ int main() {
         getline(ss, sub, ',');
         getline(ss, title, ',');
         getline(ss, date, ',');
-        assignments.push_back({sub, title, date});
+        pq.insert({sub, title, date});
     }
     fin.close();
 
-    sort(assignments.begin(), assignments.end(), [](const Assignment &a, const Assignment &b) {
-        return a.dueDate < b.dueDate;
-    });
-
     cout << "[";
-    for (int i = 0; i < (int)assignments.size(); i++) {
+    bool first = true;
+    while (!pq.empty()) {
+        if (!first) cout << ",";
+        Assignment a = pq.extractMin();
         cout << "{"
-             << "\"subject\":\"" << assignments[i].subject << "\","
-             << "\"title\":\"" << assignments[i].title << "\","
-             << "\"due_date\":\"" << assignments[i].dueDate << "\""
+             << "\"subject\":\"" << a.subject << "\","
+             << "\"title\":\"" << a.title << "\","
+             << "\"due_date\":\"" << a.dueDate << "\""
              << "}";
-        if (i < (int)assignments.size() - 1) cout << ",";
+        first = false;
     }
     cout << "]" << endl;
 
     return 0;
 }
+
+// ==========================================
+// PHASE 3 PENDING:
+// 1. editDueDate() inside MinHeap is declared but incomplete.
+//    Once complete, it will allow updating the due date of an
+//    assignment and correctly bubbling it up or down the heap.
+// ==========================================

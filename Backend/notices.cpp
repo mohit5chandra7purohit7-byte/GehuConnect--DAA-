@@ -12,9 +12,8 @@ struct Notice {
 
 struct TrieNode {
     TrieNode* children[26];
-    bool isEnd;
+    vector<Notice> categoryNotices;
     TrieNode() {
-        isEnd = false;
         for (int i = 0; i < 26; i++) children[i] = nullptr;
     }
 };
@@ -24,36 +23,53 @@ public:
     TrieNode* root;
     Trie() { root = new TrieNode(); }
 
-    void insert(string word) {
+    void insert(string category, Notice n) {
         TrieNode* curr = root;
-        for (char c : word) {
+        for (char c : category) {
             int idx = tolower(c) - 'a';
             if (idx < 0 || idx >= 26) continue;
             if (!curr->children[idx])
                 curr->children[idx] = new TrieNode();
             curr = curr->children[idx];
         }
-        curr->isEnd = true;
+        curr->categoryNotices.push_back(n);
     }
 
-    bool search(string word) {
+    vector<Notice> search(string category) {
         TrieNode* curr = root;
-        if (!curr) return false;
-        return false;
+        for (char c : category) {
+            int idx = tolower(c) - 'a';
+            if (idx < 0 || idx >= 26) continue;
+            if (!curr->children[idx]) return {};
+            curr = curr->children[idx];
+        }
+        return curr->categoryNotices;
+    }
+
+    // Phase 3 pending
+    vector<string> autoCompleteCategory(string prefix) {
+        // missing recursive traversal to find all child categories
+        return {};
     }
 };
 
-int main() {
-    ifstream fin("input.txt");
+int main(int argc, char* argv[]) {
+    if (argc < 2) {
+        cout << "{\"error\":\"Missing temp file argument\"}" << endl;
+        return 1;
+    }
+    ifstream fin(argv[1]);
     if (!fin.is_open()) {
         cout << "{\"error\":\"input file missing\"}" << endl;
         return 1;
     }
 
-    string category;
-    getline(fin, category);
+    string req_category;
+    getline(fin, req_category);
 
-    vector<Notice> notices;
+    vector<Notice> allNotices;
+    Trie trie;
+    
     string line;
     while (getline(fin, line)) {
         if (line.empty()) continue;
@@ -69,17 +85,16 @@ int main() {
             else if (col == 4) n.urgency  = token;
             col++;
         }
-        notices.push_back(n);
+        allNotices.push_back(n);
+        trie.insert(n.category, n);
     }
     fin.close();
 
-    Trie trie;
-    for (auto &n : notices) trie.insert(n.title);
-
     vector<Notice> filtered;
-    for (auto &n : notices) {
-        if (category == "all" || n.category == category)
-            filtered.push_back(n);
+    if (req_category == "all") {
+        filtered = allNotices;
+    } else {
+        filtered = trie.search(req_category);
     }
 
     cout << "[";
@@ -97,3 +112,9 @@ int main() {
 
     return 0;
 }
+
+// ==========================================
+// PHASE 3 PENDING:
+// 1. autoCompleteCategory() inside Trie is declared but incomplete.
+//    Once complete, users typing "E" will get "Event", "Exam", etc.
+// ==========================================
